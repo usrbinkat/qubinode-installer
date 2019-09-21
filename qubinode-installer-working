@@ -349,6 +349,7 @@ NOARG=true
 if [ "A${qubinode_product}" == "Atrue" ]
 then
     validate_product_by_user
+    product_maintenance="${qubinode_maintenance_opt}"
     if [ "A${product_in_use}" != "A" ]
     then
         qubinode_product_deployment
