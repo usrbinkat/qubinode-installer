@@ -1,9 +1,9 @@
 #!/bin/bash
 
 setup_variables
-IDM_VM_PLAY="${project_dir}/playbooks/idm_vm_deployment.yml"
+IDM_VM_PLAY="${project_dir}/project/idm_vm_deployment.yml"
 product_in_use=idm
-idm_vars_file="${project_dir}/playbooks/vars/idm.yml"
+idm_vars_file="${project_dir}/project/vars/idm.yml"
 # Check if we should setup qubinode
 DNS_SERVER_NAME=$(awk -F'-' '/idm_hostname:/ {print $2; exit}' "${idm_vars_file}" | tr -d '"')
 prefix=$(awk '/instance_prefix/ {print $2;exit}' "${vars_file}")
@@ -107,7 +107,7 @@ function ask_user_for_custom_idm_server () {
             static_ip_msg=" Enter the ip address for the existing IdM server"
             static_ip_result_msg=" The qubinode-installer will connect to the IdM server on"
             set_idm_static_ip
-            sed -i "s/1.1.1.1/$idm_server_ip/g" ${project_dir}/playbooks/vars/*.yml
+            sed -i "s/1.1.1.1/$idm_server_ip/g" ${project_dir}/project/vars/*.yml
 
             printf "%s\n\n" ""
             printf "%s\n" "  Please provide the hostname of the existing DNS server."
@@ -171,7 +171,7 @@ function ask_user_for_custom_idm_server () {
             sed -i 's/idm_hostname:.*/idm_hostname: "{{ instance_prefix }}-dns01"/g' "${idm_vars_file}"
 
             # Setting default IdM server name
-            CHANGE_PTR=$(cat ${project_dir}/playbooks/vars/all.yml | grep qubinode_ptr: | awk '{print $2}')
+            CHANGE_PTR=$(cat ${project_dir}/project/vars/all.yml | grep qubinode_ptr: | awk '{print $2}')
             sed -i 's#  - "{{ qubinode_ptr }}"#  - '$CHANGE_PTR'#g'  "${idm_vars_file}"
             sed -i 's#  - "{{ qubinode_ptr_two }}"#  - 50.168.192.in-addr.arpa#g'  "${idm_vars_file}"
         fi
@@ -294,8 +294,8 @@ function isIdMrunning () {
 }
 
 function qubinode_teardown_idm () {
-     IDM_PLAY_CLEANUP="${project_dir}/playbooks/idm_server_cleanup.yml"
-     libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/playbooks/vars/kvm_host.yml")
+     IDM_PLAY_CLEANUP="${project_dir}/project/idm_server_cleanup.yml"
+     libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/project/vars/kvm_host.yml")
      local vmdisk="${libvirt_dir}/${idm_srv_hostname}_vda.qcow2"
      if sudo virsh list --all |grep -q "${idm_srv_hostname}"
      then
@@ -317,7 +317,7 @@ function qubinode_deploy_idm_vm () {
         qubinode_vm_deployment_precheck
         isIdMrunning
 
-        IDM_PLAY_CLEANUP="${project_dir}/playbooks/idm_server_cleanup.yml"
+        IDM_PLAY_CLEANUP="${project_dir}/project/idm_server_cleanup.yml"
         SET_IDM_STATIC_IP=$(awk '/idm_check_static_ip/ {print $2; exit}' "${idm_vars_file}"| tr -d '"')
 
         if [ "A${idm_running}" == "Afalse" ]
@@ -360,7 +360,7 @@ function qubinode_install_idm () {
     then
         qubinode_vm_deployment_precheck
         ask_user_input
-        IDM_INSTALL_PLAY="${project_dir}/playbooks/idm_server.yml"
+        IDM_INSTALL_PLAY="${project_dir}/project/idm_server.yml"
 
         echo "Install and configure the IdM server"
         idm_server_ip=$(awk '/idm_server_ip:/ {print $2}' "${idm_vars_file}")

@@ -50,7 +50,7 @@ function setup_required_paths () {
         config_err_msg; exit 1
     fi
 
-    if [ ! -d "${project_dir}/playbooks/vars" ] ; then
+    if [ ! -d "${project_dir}/project/vars" ] ; then
         config_err_msg; exit 1
     fi
 }
