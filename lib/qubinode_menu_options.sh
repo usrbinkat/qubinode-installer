@@ -42,7 +42,7 @@ function qubinode_product_deployment () {
                   openshift4_server_maintenance
               else
                   ASK_SIZE=true
-                  rhel_major=$(awk '/^qcow_rhel_release:/ {print $2}' "${project_dir}/playbooks/vars/idm.yml")
+                  rhel_major=$(awk '/^qcow_rhel_release:/ {print $2}' "${project_dir}/project/vars/idm.yml")
                   setup_download_options 
                   qubinode_deploy_ocp4
               fi
@@ -53,7 +53,7 @@ function qubinode_product_deployment () {
                   qubinode_teardown_satellite
               else
                   echo "Installing Satellite"
-                  rhel_major=$(awk '/^qcow_rhel_release:/ {print $2}' "${project_dir}/playbooks/vars/satellite.yml")
+                  rhel_major=$(awk '/^qcow_rhel_release:/ {print $2}' "${project_dir}/project/vars/satellite.yml")
                   setup_download_options
                   download_files
                   qubinode_deploy_satellite
@@ -79,7 +79,7 @@ function qubinode_product_deployment () {
                   qubinode_idm_maintenance
               else
                   echo "Running IdM VM deploy function"
-                  rhel_major=$(awk '/^qcow_rhel_release:/ {print $2}' "${project_dir}/playbooks/vars/idm.yml")
+                  rhel_major=$(awk '/^qcow_rhel_release:/ {print $2}' "${project_dir}/project/vars/idm.yml")
                   setup_download_options
                   download_files
                   qubinode_deploy_idm

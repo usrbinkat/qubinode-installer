@@ -4,10 +4,10 @@
   remote_user: admin
   become: true
   vars_files:
-    - vars/all.yml
-    - vars/kvm_host.yml
-    - vars/vault.yml
-    - vars/idm.yml
+    - /home/admin/qubinode-installer/env/passwords
+    - /home/admin/qubinode-installer/env/extravars
+    - host_vars/kvm_host.yml
+    - host_vars/qbn-dns01
 
   tasks:
     - name: Check if IdM is answering
@@ -114,3 +114,14 @@
         dest: /etc/resolv.conf
       when: not vm_teardown|bool and idm_is_installed|bool
       delegate_to: 127.0.0.1
+
+    - name: Restore original /etc/resolv.conf file
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      copy:
+        src: "{{ project_dir }}/backups/resolv.conf"
+        dest: /etc/resolv.conf
+        follow: yes
+      when: vm_teardown|bool and not resolv_backup.stat.exists and not idm_is_installed|bool
+      delegate_to: 127.0.0.1
+

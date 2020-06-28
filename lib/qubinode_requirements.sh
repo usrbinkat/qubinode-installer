@@ -8,14 +8,14 @@ function qubinode_required_prereqs () {
     # setup required paths
     setup_required_paths
     vault_key_file="/home/${CURRENT_USER}/.vaultkey"
-    vault_vars_file="${project_dir}/playbooks/vars/vault.yml"
-    vars_file="${project_dir}/playbooks/vars/all.yml"
-    idm_vars_file="${project_dir}/playbooks/vars/idm.yml"
+    vault_vars_file="${project_dir}/project/vars/vault.yml"
+    vars_file="${project_dir}/project/vars/all.yml"
+    idm_vars_file="${project_dir}/project/vars/idm.yml"
     hosts_inventory_dir="${project_dir}/inventory"
     inventory_file="${hosts_inventory_dir}/hosts"
-    ocp3_vars_file="${project_dir}/playbooks/vars/ocp3.yml"
-    okd3_vars_file="${project_dir}/playbooks/vars/okd3.yml"
-    kvm_host_vars_file="${project_dir}/playbooks/vars/kvm_host.yml"
+    ocp3_vars_file="${project_dir}/project/vars/ocp3.yml"
+    okd3_vars_file="${project_dir}/project/vars/okd3.yml"
+    kvm_host_vars_file="${project_dir}/project/vars/kvm_host.yml"
     generate_all_yaml_script="${project_dir}/lib/generate_all_yaml.sh"
 
     # copy sample vars file to playbook/vars directory
@@ -108,7 +108,7 @@ function setup_variables () {
     #QUBINODE_SYSTEM=$(awk '/run_qubinode_setup:/ {print $2; exit}' "${vars_file}" | tr -d '"')
 
     # Satellite server vars file
-    SATELLITE_VARS_FILE="${project_dir}/playbooks/vars/satellite_server.yml"
+    SATELLITE_VARS_FILE="${project_dir}/project/vars/satellite_server.yml"
 
     VM_DATA_DIR=$(awk '/^vm_data_dir:/ {print $2}' ${vars_file}|tr -d '"')
     ADMIN_USER=$(awk '/^admin_user:/ {print $2;exit}' "${vars_file}")
@@ -121,8 +121,8 @@ function setup_variables () {
     ansible_completed=$(awk '/qubinode_installer_ansible_completed:/ {print $2;exit}' "${vars_file}")
     #host_completed=$(awk '/qubinode_installer_host_completed:/ {print $2;exit}' "${vars_file}")
     base_setup_completed=$(awk '/qubinode_base_reqs_completed:/ {print $2;exit}' "${vars_file}")
-    libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/playbooks/vars/kvm_host.yml")
-    warn_storage_profile=$(awk '/^warn_storage_profile:/ {print $2; exit}' "${project_dir}/playbooks/vars/all.yml")
+    libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/project/vars/kvm_host.yml")
+    warn_storage_profile=$(awk '/^warn_storage_profile:/ {print $2; exit}' "${project_dir}/project/vars/all.yml")
 
 }
 
@@ -227,8 +227,8 @@ function pre_check_for_rhel_qcow_image () {
 
 function qcow_check () {
     download_files
-    libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/playbooks/vars/kvm_host.yml")
-    os_qcow_image_name=$(awk '/^qcow_rhel7_name:/ {print $2}' "${project_dir}/playbooks/vars/all.yml")
+    libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/project/vars/kvm_host.yml")
+    os_qcow_image_name=$(awk '/^qcow_rhel7_name:/ {print $2}' "${project_dir}/project/vars/all.yml")
     qcow_image=$( sudo bash -c 'find / -name '${os_qcow_image_name}' | grep -v qubinode | head -n 1')
     if sudo bash -c '[[ ! -f '${libvirt_dir}'/'${os_qcow_image_name}' ]]'; then
       if [[ -f "${project_dir}/${os_qcow_image_name}" ]]; then
@@ -288,8 +288,8 @@ setup_download_options () {
     TOKEN_STATUS="notexist"
     QCOW_STATUS="notexist"
     DWL_QCOW=no
-    libvirt_dir=$(awk '/^kvm_host_libvirt_dir:/ {print $2}' "${project_dir}/playbooks/vars/kvm_host.yml")
-    artifact_qcow_image=$(grep "qcow_rhel${rhel_major}_name:" "${project_dir}/playbooks/vars/all.yml"|awk '{print $2}')
+    libvirt_dir=$(awk '/^kvm_host_libvirt_dir:/ {print $2}' "${project_dir}/project/vars/kvm_host.yml")
+    artifact_qcow_image=$(grep "qcow_rhel${rhel_major}_name:" "${project_dir}/project/vars/all.yml"|awk '{print $2}')
     if sudo test -f "${libvirt_dir}/${artifact_qcow_image}"
     then
         QCOW_STATUS=exist
@@ -371,8 +371,8 @@ download_files () {
     RHSM_CLI=no
     RHSM_CLI_CMD="${project_dir}/.python/rhsm_cli/bin/rhsm-cli"
     RHSM_CLI_CONFIG="/home/${ADMIN_USER}/.config/rhsm-cli.conf"
-    qcow_image_name=$(grep "qcow_rhel${rhel_major}_name:" "${project_dir}/playbooks/vars/all.yml"|awk '{print $2}')
-    qcow_image_checksum=$(grep "qcow_rhel${rhel_major}u._checksum:" "${project_dir}/playbooks/vars/all.yml"|awk '{print $2}')
+    qcow_image_name=$(grep "qcow_rhel${rhel_major}_name:" "${project_dir}/project/vars/all.yml"|awk '{print $2}')
+    qcow_image_checksum=$(grep "qcow_rhel${rhel_major}u._checksum:" "${project_dir}/project/vars/all.yml"|awk '{print $2}')
 
 
     if [ -f $RHSM_CLI ]
