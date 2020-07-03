@@ -3,6 +3,13 @@
 # Qubinode yaml config flags 
 collect_generic_info: false
 configure_secerts: false 
+configure_kvm_host: false 
+configure_idm_info: false 
+configure_rhel_vm_info: false
+configure_generic_vm_info: false 
+
+# set storage device to dedicate to /var/lib/libvirt/images
+kvm_host_libvirt_extra_disk: "{{ kvm_host_libvirt_extra_disk | default('nvme0n1') }}"
 
 # Qubinode Project Information
 instance_prefix: qbn
@@ -63,3 +70,35 @@ vm_net_netmask: "{{ kvm_host_netmask }}"
 # Ansible Tower Secerts 
 tower_pg_password: ""
 tower_rabbitmq_password: ""
+
+# VM Options 
+vm_teardown: false # defaulting to false 
+cloud_init_vm_image: rhel-server-7.8-x86_64-kvm.qcow2
+
+# RHEL SERVER Defaults
+rhel_server_vm:
+  rhel_enable: true
+  rhel_extra_storage:
+  - enable: false
+    size: ''
+  rhel_group: rhel
+  rhel_memory: 800
+  rhel_name: 'rhelbox-1'
+  rhel_recreate: false
+  rhel_root_disk_size: 20G
+  rhel_teardown: false
+  rhel_vcpu: 1
+
+# GENERIC VM Defaults
+generic_server_vm:
+  generic_enable: true
+  generic_extra_storage:
+  - enable: false
+    size: ''
+  generic_group: generic
+  generic_memory: 800
+  generic_name: 'genericbox-1'
+  generic_recreate: false
+  generic_root_disk_size: 20G
+  generic_teardown: false
+  generic_vcpu: 1

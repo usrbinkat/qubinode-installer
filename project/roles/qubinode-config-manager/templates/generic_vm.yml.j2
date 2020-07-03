@@ -1,20 +1,20 @@
 ---
-cloud_init_vm_image_url: https://download.fedoraproject.org/pub/fedora/linux/releases/32/Cloud/x86_64/images/Fedora-Cloud-Base-32-1.6.x86_64.raw.xz
-expand_os_disk: 'no'
-qcow_generic_release: 32-1.6
+cloud_init_vm_image_url: "{{ cloud_init_vm_image_url }}"
+vm_teardown: {{ vm_teardown }}
+expand_os_disk: {{ expand_os_disk }}
 generic_hash: null
-generic_release: 32-1.6
+generic_release: {{ generic_release }}
 generic_server_vm:
   generic_enable: true
   generic_extra_storage:
   - enable: false
     size: ''
   generic_group: generic
-  generic_memory: 800
-  generic_name: 'genericbox-1'
-  generic_recreate: false
-  generic_root_disk_size: 20G
-  generic_teardown: false
-  generic_vcpu: 1
-update_etc_resolv: 'no'
+  generic_memory: {{ generic_memory }}
+  generic_name:  {{ generic_name }}
+  generic_recreate:  {{ generic_recreate }}
+  generic_root_disk_size:  {{ generic_root_disk_size }}
+  generic_teardown:  {{ generic_teardown }}
+  generic_vcpu:  {{ vm_teardown }}
+update_etc_resolv:  {{ update_etc_resolv }}
 vm_root_disk_size: '{{ generic_server_vm.generic_root_disk_size }}'

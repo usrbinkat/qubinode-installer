@@ -5,25 +5,101 @@ The Qubinode Config Checker will generate the reequired files needed in a deploy
 
 Requirements
 ------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* Ansible 
+* python3 
+* pip3
+* pip3 install netaddr
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+This Role is used to configure all the required vairbles needed in a qubinode deployment
 
 
 How to run
 ------------
 1. start with the configure_secerts.yml 
 ```
-ansible-playbook  pproject/qubinode-config-management.yml --extra-vars "configure_secerts=true"
+ansible-playbook  project/qubinode-config-management.yml --extra-vars "configure_secerts=true"
 ```
 
 2. Configure extravars
 ```
 ansible-playbook  project/qubinode-config-management.yml --extra-vars "collect_generic_info=true"
+```
+
+3. Configure KVM variables
+```
+ansible-playbook  project/qubinode-config-management.yml --extra-vars "configure_kvm_host=true"
+```
+
+4. Configure IDM Variables
+```
+ansible-playbook  project/qubinode-config-management.yml --extra-vars "configure_idm_info=true" --extra-vars "vm_teardown=false"
+```
+
+5. Configure RHEL VM Variables
+```
+cat >extra_vars.json<<EOF
+{
+   "cloud_init_vm_image": "rhel-server-7.8-x86_64-kvm.qcow2",
+   "vm_teardown": false,
+   "vm_recreate": false,
+   "configure_rhel_vm_info": true,
+   "expand_os_disk": "no",
+   "rhel_7_hash": null,
+   "rhel_8_hash": null,
+   "rhel_release": 7,
+    "rhel_enable": true,
+    "rhel_extra_storage": [
+       {
+          "enable": false,
+          "size": ""
+       }
+    ],
+    "rhel_group": "rhel",
+    "rhel_recreate": false,
+    "rhel_root_disk_size": "20G",
+    "rhel_vcpu": 1,
+   "rhel_memory": 800,
+   "rhel_name": "rhel_example",
+   "update_etc_resolv": "no",
+   "vm_root_disk_size": "{{ rhel_server_vm.rhel_root_disk_size }}"
+}
+EOF
+
+ansible-playbook  project/qubinode-config-management.yml  -e "@extra_vars.json"
+```
+
+6. Configure Generic VM Variables
+```
+cat >extra_vars.json<<EOF
+{
+   "configure_generic_vm_info": true,
+   "cloud_init_vm_image_url": "https://download.fedoraproject.org/pub/fedora/linux/releases/32/Cloud/x86_64/images/Fedora-Cloud-Base-32-1.6.x86_64.raw.xz",
+   "expand_os_disk": "no",
+   "generic_hash": null,
+   "generic_release": "Fedora-Cloud-Base-32-1.6",
+   "generic_enable": true,
+   "generic_extra_storage": [
+      {
+         "enable": false,
+         "size": ""
+      }
+   ],
+   "generic_group": "generic",
+   "generic_memory": 800,
+   "generic_name": "genericbox-example",
+   "generic_recreate": false,
+   "generic_root_disk_size": "20G",
+   "vm_teardown": false,
+   "generic_vcpu": 1,
+   "update_etc_resolv": "no",
+   "vm_root_disk_size": "{{ generic_server_vm.generic_root_disk_size }}"
+}
+EOF
+
+ansible-playbook  project/qubinode-config-management.yml  -e "@extra_vars.json"
 ```
 
 Dependencies

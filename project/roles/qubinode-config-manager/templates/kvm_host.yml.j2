@@ -18,14 +18,14 @@ qubinode_bridge_name: qubibr0
 rhel_release: {{ hostvars[inventory_hostname].ansible_distribution_version }}
 
 # This variable is being phased out
-run_qubinode_setup: yesConfigure Secert Information
+run_qubinode_setup: yes
 
 # Run storage check
 run_storage_check: ""
 
 # set path to libvirt images
 kvm_host_libvirt_dir: /var/lib/libvirt/images
-host_device: "{{ kvm_host_libvirt_extra_disk | default('nvme0n1') }}"
+host_device: "{{ kvm_host_libvirt_extra_disk }}"
 vg_name: vg_qubi
 vm_libvirt_net_check: yes
 
@@ -41,7 +41,7 @@ create_lvm: yes
 network_interface_name: "{{ kvm_host_interface }}"
 
 # set storage device to dedicate to /var/lib/libvirt/images
-kvm_host_libvirt_extra_disk: ""
+kvm_host_libvirt_extra_disk: "{{ kvm_host_libvirt_extra_disk }}"
 
 # use by funciton check_hardware_resources
 libvirt_pool_name: default

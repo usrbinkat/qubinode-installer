@@ -18,8 +18,7 @@ dns_server_vm:
   dns_teardown: '{{ vm_teardown }}'
   dns_vcpu: 2
 expand_os_disk: 'no'
-idm_admin_password: '{{ idm_admin_pwd }}'
-idm_admin_user: admin
+idm_admin_user: "{{ idm_admin_user }}"
 idm_check_static_ip: ''
 idm_forward_ip: '{{ dns_forwarder }}'
 idm_hostname: '{{ idm_hostname }}'
@@ -36,8 +35,6 @@ idm_reverse_zones:
   - {{ kvm_host_ip | ipaddr('revdns')}}
   - {{ '192.168.50.1' | ipaddr('revdns')}}
 idm_server_ip: ""
-idm_ssh_pwd: '{{ admin_user_password }}'
-idm_ssh_user: '{{ admin_user }}'
 idm_zone_overlap: false
 ipa_host: '{{ idm_hostname }}.{{ domain }}'
 qcow_rhel_release: 7

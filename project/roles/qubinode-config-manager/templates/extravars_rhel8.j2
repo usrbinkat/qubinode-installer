@@ -40,8 +40,6 @@ vm_public_key: /home/{{ admin_user }}/.ssh/id_rsa.pub
 update_inventory: true
 vm_data_dir: /var/lib/vmdata
 inventory_file: {{ inventory_dir }}/hosts
-admin_user_password: {{ admin_user_password }}
-kvm_vm_root_pwd: {{ admin_user_password }}
 vm_domain: {{ domain }}
 search_domains:
   - {{ vm_domain }}
@@ -62,11 +60,8 @@ static_ip: true
 
 # ROLE: swygue-redhat-subscription
 rhsm_org: {{ rhsm_org }}
-rhsm_activationkey: "{{ rhsm_activationkey }}"
 rhsm_org_id: {{ rhsm_org }}
 rhsm_setup_insights_client: false
-rhsm_user: "{{ rhsm_username }}"
-rhsm_pass: "{{ rhsm_password }}"
 org_id: {{ rhsm_org }}
 
 # ROLE: swygue.edge_host_setup role
@@ -144,7 +139,7 @@ libvirt_host_networks:
     ipaddress: "{{ kvm_host_ip }}"
     mask: "{{ kvm_host_netmask }}"
     mac: "{{ kvm_host_macaddr }}"
-
+kvm_host_gw
 ###########################################
 # variables for swygue.edge_host_setup role
 
