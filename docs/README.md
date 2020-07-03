@@ -27,34 +27,58 @@ If you choose **Server with GUI**, make sure from the **Add-ons for Selected Evi
 >  * The RHEL installer will delicate the majority of your storage to /home,  you can choose **"I will configure partitioning"** to have control over this.
 >  * Set root password and create admin user with sudo privilege
 
-### The qubinode-installer
+### The qubinode-installer for python development
 
-Downlaod and extract the qubinode-installer as a non root user.
+Download and extract the qubinode-installer as a non root user.
 
-```shell=
-cd $HOME
-wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
-unzip master.zip
-rm master.zip
-mv qubinode-installer-master qubinode-installer
+### Register first, then attach a subscription in the Customer Portal
+```
+subscription-manager register
+```
+### Attach a specific subscription through the Customer Portal
+ ```
+subscription-manager refresh
+```
+  
+### Attach a subscription from any available that match the system
+```
+subscription-manager attach --auto
+```
+
+### Register repos
+```
+sudo subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms --enable=rhel-8-for-x86_64-baseos-rpms --enable ansible-2.9-for-rhel-8-x86_64-rpms
+```
+
+### Install python3-pip ansible git vim 
+ ```
+dnf install python3-pip ansible git vim -y 
+```
+
+## Clone the qubinode repo 
+```
+git clone https://github.com/tosin2013/qubinode-installer.git
+
+```
+
+## Switch to python-build branch
+```
+git checkout python-build
 ```
 
 ### Qubinode Setup
 
 The below commands ensure your system is setup as a KVM host.
 The qubinode-installer needs to run as a regular user.
-
-* setup   - ensure your username is setup for sudoers
-* rhsm    - ensure your rhel system is registered to Red Hat
-* ansible - ensure your rhel system is setup for to function as a ansible controller
-* host    - ensure your rhel system is setup as a KVM host
-
-```shell=
-./qubinode-installer -m setup
-./qubinode-installer -m rhsm
-./qubinode-installer -m ansible
-./qubinode-installer -m host
 ```
+python3 lib/
+```
+
+Install ansible roles 
+```
+ ansible-galaxy install -r  project/requirements.yml
+```
+
 
 ## Deploy a Red Hat Product
 

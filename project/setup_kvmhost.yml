@@ -3,9 +3,9 @@
   hosts: localhost
   become: yes
   vars_files:
-    - vars/all.yml
-    - vars/kvm_host.yml
-    - vars/vault.yml
+    - ../inventory/extravars_rhel8
+    - ../inventory/kvm_host.yml
+    - ../inventory/passwords
 
   tasks:
     - name: ensure backup folder is created

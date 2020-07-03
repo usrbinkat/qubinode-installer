@@ -37,7 +37,7 @@ cat >extra_vars.json<<EOF
    "rhsm_activationkey": "",
    "admin_user_password": "changeme",
    "idm_ssh_user": "yourusername",
-   "idm_dm_pwd": 'thi$i$averyL0ngpa$$w0rd',
+   "idm_dm_pwd": 'thisisaveryL0ngpaSSw0rd',
    "idm_admin_pwd": "changeme"
 }
 EOF

@@ -1,3 +1,36 @@
+- debug:
+    msg: "TODO: Add auto detection as secondray storage  for nvme0n1 or other types of stroage"
+
+- pause:
+    prompt: "nvme0n1 has not been worked on yet see above message and press [ENTER] to continue"
+
+- name: Checking for SATA Device 
+  set_fact:
+    device_name: "{{ item.key }}"
+  no_log: False
+  with_dict: "{{ ansible_devices }}"
+  when: "item.value.host.startswith('SATA')"
+
+- name: show all values for selected device name
+  debug: var=ansible_devices[device_name]
+  when: kvm_host_libvirt_extra_disk | length == 0
+
+- name: show only device name
+  debug: var=device_name
+  when: kvm_host_libvirt_extra_disk | length == 0
+
+- name: updating kvm_host_libvirt_extra_disk variable for server with single disk
+  set_fact:
+     libvirt_dev: "{{ device_name }}"
+     kvm_host_libvirt_extra_disk: ""
+     create_lvm: no
+  when: kvm_host_libvirt_extra_disk | length == 0  
+
+
+- name: Refresh inventory to ensure new instances exist in inventory
+  meta: refresh_inventory
+  when: kvm_host_libvirt_extra_disk | length == 0
+
 - name: Copying over kvm_host this will be used to for the kvm variables
   template:
     src: templates/kvm_host.yml.j2

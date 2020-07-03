@@ -25,7 +25,7 @@ run_storage_check: ""
 
 # set path to libvirt images
 kvm_host_libvirt_dir: /var/lib/libvirt/images
-host_device: "{{ kvm_host_libvirt_extra_disk }}"
+host_device: "{{ libvirt_dev }}"
 vg_name: vg_qubi
 vm_libvirt_net_check: yes
 
@@ -35,7 +35,7 @@ configure_bridge: true
 # Set to no prevent the installer from attempting
 # setup a LVM group for qubinode. Also set this to no
 # if you already have you storage for lvm setup
-create_lvm: yes
+create_lvm: "{{ create_lvm }}"
 
 # used in playbook setup_kvmhost.yml
 network_interface_name: "{{ kvm_host_interface }}"
