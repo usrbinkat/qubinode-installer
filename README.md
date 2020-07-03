@@ -1,4 +1,4 @@
-# Qubinode Installer v2.4.1
+# Qubinode Installer v3.0.0
 Qubinode is for users wanting to stand up an RHEL based lab environment running on KVM.
 
 ## Motivation
@@ -27,7 +27,18 @@ The required base OS is Red Hat Enterprise Linux 7.8 refer to the [Getting Start
 
 | Qubinode Version  | Ansible version | Tag |
 | ------------- | ----------------- |-----------------|
-|     Release 2.4.1    | 2.9               | 2.4.1 |
+|     Release 3.0.0    | 2.9               | 3.0.0 |
+
+## Qubinode Dev Branch for next release
+Feature  |  Status
+--|---
+Code refactor |  In progress|
+Ansible Tower | Testing |  
+Red Hat Satellite Server  | In progress|
+RHEL 8.x Support  | In progress|
+OKD 4.x Support  | Testing/Development |
+OCS Support |  In progress  |   
+Cockpit Integration | Not Started
 
 
 ## Deploying a OpenShift cluster
@@ -68,16 +79,6 @@ If you would like to Contribute to the qubinode project please see the documenta
 If you have any direct questions, reach out to us [using the guide](docs/communication.md).
 
 ## Known issues
-
-## Qubinode Dev Branch for next release
-Feature  |  Status
---|---
-Ansible Tower | Testing |  
-Red Hat Satellite Server  | In progress|
-RHEL 8.x Support  | In progress|
-OKD 4.x Support  | Testing/Development |
-OCS Support |  In progress  |   
-Cockpit Integration | Not Started
 
 ## Roadmap
 * OCP 4.x Container Native Storage
