@@ -29,7 +29,7 @@ How to run
 ```
 cat >extra_vars.json<<EOF
 {
-   "collect_generic_info": true,
+   "configure_secerts": true,
    "rhsm_username": "yourusername",
    "rhsm_password": "changeme",
    "rhsm_pass": "{{ rhsm_password }}",
@@ -37,11 +37,12 @@ cat >extra_vars.json<<EOF
    "rhsm_activationkey": "",
    "admin_user_password": "changeme",
    "idm_ssh_user": "yourusername",
-   "idm_dm_pwd": "thi$i$averyL0ngpa$$w0rd",
-   "idm_admin_pwd": "{{ idm_admin_pwd }}"
+   "idm_dm_pwd": 'thi$i$averyL0ngpa$$w0rd',
+   "idm_admin_pwd": "changeme"
 }
 EOF
 ansible-playbook  project/qubinode-config-management.yml -e "@extra_vars.json"
+rm extra_vars.json
 ```
 
 2. Configure extravars

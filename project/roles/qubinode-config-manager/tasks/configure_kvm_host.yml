@@ -1,7 +1,7 @@
 - name: Copying over kvm_host this will be used to for the kvm variables
   template:
     src: templates/kvm_host.yml.j2
-    dest:  /tmp/kvm_host.yml
+    dest:  /{{ inventory_dir }}/kvm_host.yml
     owner: admin
     group: admin
     mode: 0666

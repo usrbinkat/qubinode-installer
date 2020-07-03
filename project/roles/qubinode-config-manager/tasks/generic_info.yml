@@ -1,0 +1,7 @@
+- name: Copying over extravars this will be used for generic variables 
+  template:
+    src: templates/extravars_rhel8.j2
+    dest:  /{{ inventory_dir }}/extravars_rhel8
+    owner: admin
+    group: admin
+    mode: 0666

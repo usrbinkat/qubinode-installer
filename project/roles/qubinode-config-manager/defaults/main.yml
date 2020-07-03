@@ -64,7 +64,7 @@ kvm_host_macaddr: "{{ ansible_default_ipv4.macaddress }}"
 net_mask: "{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask }}"
 kvm_host_mask_prefix: "{{ net_mask | ipaddr('prefix') }}"
 kvm_host_netmask: "{{ ansible_default_ipv4.netmask }}"
-vm_net_gateway: "{{ kvm_host_gw }}"generic_teardown
+vm_net_gateway: "{{ kvm_host_gw }}"
 vm_net_netmask: "{{ kvm_host_netmask }}"
 
 # Ansible Tower Secerts 
