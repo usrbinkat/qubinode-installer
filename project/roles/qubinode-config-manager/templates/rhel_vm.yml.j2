@@ -1,0 +1,21 @@
+---
+cloud_init_vm_image: rhel-server-7.8-x86_64-kvm.qcow2
+expand_os_disk: 'no'
+qcow_rhel_release: 7
+rhel_7_hash: null
+rhel_8_hash: null
+rhel_release: 7
+rhel_server_vm:
+  rhel_enable: true
+  rhel_extra_storage:
+  - enable: false
+    size: ''
+  rhel_group: rhel
+  rhel_memory: 800
+  rhel_name: 'rhelbox-1'
+  rhel_recreate: false
+  rhel_root_disk_size: 20G
+  rhel_teardown: false
+  rhel_vcpu: 1
+update_etc_resolv: 'no'
+vm_root_disk_size: '{{ rhel_server_vm.rhel_root_disk_size }}'

@@ -1,0 +1,65 @@
+---
+# defaults file for qubinode-config-manager
+# Qubinode yaml config flags 
+collect_generic_info: false
+configure_secerts: false 
+
+# Qubinode Project Information
+instance_prefix: qbn
+product: ocp4
+admin_user: admin
+inventory_dir: "/home/{{ admin_user }}/qubinode-installer/inventory"
+project_dir: "/home/{{ admin_user }}/qubinode-installer/"
+# Qubinode ssh user password secert
+admin_user_password: ""
+
+# Red Hat Subscription Information 
+rhsm_org: ""
+rhsm_activationkey: ""
+rhsm_username: username
+rhsm_password: ""
+rhsm_reg_method: "Username and Password" # set "Activation Key" to use activation key
+
+# RHEL qcow images 
+qcow_rhel_name: rhel-server-7.8-x86_64-kvm.qcow2 # for rhel 8 qcow rhel-8.2-x86_64-kvm.qcow2
+os_qcow_image_name: "{{ qcow_rhel_name }}"
+
+# DNS information 
+dns_forwarder: 1.1.1.1
+domain: "example.lab"
+vm_domain: "example.lab"
+public_domain: "example.lab"
+
+# Idm information 
+idm_admin_user: admin
+idm_dm_pwd: changeme
+idm_hostname: qbn-dns01
+ipa_host: "{{ idm_hostname }}.{{ domain }}"
+idm_realm: '{{ domain | upper }}'
+# IdM Secert information 
+idm_ssh_user: ""
+idm_dm_pwd: ""
+idm_admin_pwd: ""
+
+#Cluster information
+cluster_name: qbn
+
+# Network Information
+nat_network_name: "{{ cluster_name }}"
+vm_libvirt_net: "qubinet"
+qubinode_bridge_name: qubibr0
+kvm_bridge_type: Bridge
+kvm_host_bootproto: none
+kvm_host_gw: "{{ ansible_default_ipv4.gateway }}"
+kvm_host_interface: "{{ ansible_default_ipv4.interface }}"
+kvm_host_ip: "{{ ansible_default_ipv4.address }}"
+kvm_host_macaddr: "{{ ansible_default_ipv4.macaddress }}"
+net_mask: "{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask }}"
+kvm_host_mask_prefix: "{{ net_mask | ipaddr('prefix') }}"
+kvm_host_netmask: "{{ ansible_default_ipv4.netmask }}"
+vm_net_gateway: "{{ kvm_host_gw }}"
+vm_net_netmask: "{{ kvm_host_netmask }}"
+
+# Ansible Tower Secerts 
+tower_pg_password: ""
+tower_rabbitmq_password: ""
