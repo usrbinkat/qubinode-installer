@@ -16,11 +16,32 @@ Role Variables
 This Role is used to configure all the required vairbles needed in a qubinode deployment
 
 
+Getting started 
+------------
+Configure the following your defaults/main.yml
+* admin_user: admin
+* rhsm_username: username
+* idm_admin_user
+
 How to run
 ------------
 1. start with the configure_secerts.yml 
 ```
-ansible-playbook  project/qubinode-config-management.yml --extra-vars "configure_secerts=true"
+cat >extra_vars.json<<EOF
+{
+   "collect_generic_info": true,
+   "rhsm_username": "yourusername",
+   "rhsm_password": "changeme",
+   "rhsm_pass": "{{ rhsm_password }}",
+   "rhsm_org": "",
+   "rhsm_activationkey": "",
+   "admin_user_password": "changeme",
+   "idm_ssh_user": "yourusername",
+   "idm_dm_pwd": "thi$i$averyL0ngpa$$w0rd",
+   "idm_admin_pwd": "{{ idm_admin_pwd }}"
+}
+EOF
+ansible-playbook  project/qubinode-config-management.yml -e "@extra_vars.json"
 ```
 
 2. Configure extravars

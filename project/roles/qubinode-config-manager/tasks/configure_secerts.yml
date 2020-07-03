@@ -9,12 +9,12 @@
 - name: Copying over passwords file
   template:
     src: templates/passwords.j2
-    dest:  /tmp/passwords
+    dest:  /{{ inventory_dir }}/passwords
     owner: admin
     group: admin
     mode: 0775
 
 - name: Encrypting secerts 
-  script: "{{ project_dir }}/ansible-vault-manger.sh"
+  script: "{{ project_dir }}/ansible-vault-manger.sh {{ project_dir }} {{ inventory_dir }}"
   become: yes
   become_user: admin
