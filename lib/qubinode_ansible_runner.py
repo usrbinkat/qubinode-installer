@@ -4,24 +4,37 @@ from ansible_vault import Vault
 import argparse
 import os.path
 from os import path
+import json 
 
 #vault = Vault('xXxXxXxXx')
 #data = vault.load(open('env/passwords').read())
 
-def run_playbook(data_path, playbook_path, verbose, destroy):
+def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
   if verbose:
     level=3
   else:
     level=1
+  print(extra_vars)
 
-  r = ansible_runner.run(private_data_dir=data_path, playbook=playbook_path,verbosity=level, extravars={'vm_teardown': destroy})
-  print("{}: {}".format(r.status, r.rc))
-  # successful: 0
-  if verbose:
-    for each_host_event in r.events:
-      print(each_host_event['event'])
-  print("Final status:")
-  print(r.stats)
+  if extra_vars is None:
+    r = ansible_runner.run(private_data_dir='/home/admin/qubinode-installer', playbook=playbook_path,verbosity=level, extravars={'vm_teardown': destroy})
+    print("{}: {}".format(r.status, r.rc))
+    # successful: 0
+    if verbose:
+      for each_host_event in r.events:
+        print(each_host_event['event'])
+    print("Final status:")
+    print(r.stats)
+  else:
+    r = ansible_runner.run(private_data_dir='/home/admin/qubinode-installer', playbook=playbook_path,verbosity=level, extravars=json.loads(extra_vars))
+    print("{}: {}".format(r.status, r.rc))
+    # successful: 0
+    if verbose:
+      for each_host_event in r.events:
+        print(each_host_event['event'])
+    print("Final status:")
+    print(r.stats)
+  
 
 def main():
   # Creating the parser
@@ -30,6 +43,10 @@ def main():
                        metavar='playbook',
                        type=str,
                        help='Enter the playbook name. Example rhel.yml')
+  parse_item.add_argument('-e',
+                       '--extravars',
+                       type=str,
+                       help='set if you would like to pass an extravars command to the script.')
   parse_item.add_argument('-d',
                        '--destroy',
                        action='store_true',
@@ -48,7 +65,7 @@ def main():
   print(playbookname)
   cwd = os.getcwd()
   print ("File exists:"+str(path.exists(cwd+'/project/'+playbookname)))
-  run_playbook(cwd, playbookname, args.verbose, args.destroy)
+  run_playbook(cwd, playbookname, args.extravars, args.verbose, args.destroy)
 
 if __name__== "__main__":
    main()

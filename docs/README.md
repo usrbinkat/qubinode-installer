@@ -81,10 +81,14 @@ cd ..
 ```
 openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
 ```
+## Change valut key path in ansible.cfg filr 
+```
+/home/${USER}/.vaultkey
+```
 
 ### Qubinode Setup
 
-1. start with the configure_secerts.yml 
+start with the configure_secerts.yml 
 ```
 cat >env/extravars<<EOF
 {
@@ -104,12 +108,39 @@ sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml
 rm env/extra_vars.json
 ```
 
+Configure rhelX_host_vars
+```
+sudo python3 lib/qubinode_ansible_runner.py qubinode-config-management.yml  --extravars '{"collect_generic_info": true}'
+```
 
 Install ansible roles 
 ```
- ansible-galaxy install -r  project/requirements.yml
+ansible-galaxy install -r  project/requirements.yml
 ```
 
+Configure KVM variables
+```
+sudo python3 lib/qubinode_ansible_runner.py qubinode-config-management.yml  --extravars '{ "configure_kvm_host": true}'
+```
+Copy rhel-server-7.8-x86_64-kvm.qcow2 to home direcotry 
+
+Configure KVM host 
+```
+sudo -E  python3 lib/qubinode_ansible_runner.py setup_kvmhost.yml
+```
+
+Configure IDM  variables
+```
+sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml --extravars '{ "configure_idm_info": true}'
+```
+
+
+Configure IDM server 
+```
+
+sudo -E  python3 lib/qubinode_ansible_runner.py idm_vm_deployment.yml
+sudo -E  python3 lib/qubinode_ansible_runner.py idm_server.yml
+```
 
 ## Deploy a Red Hat Product
 

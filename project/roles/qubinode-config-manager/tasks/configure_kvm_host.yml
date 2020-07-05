@@ -1,8 +1,9 @@
 - debug:
     msg: "TODO: Add auto detection as secondray storage  for nvme0n1 or other types of stroage"
 
-- pause:
-    prompt: "nvme0n1 has not been worked on yet see above message and press [ENTER] to continue"
+- name: nvme0n1 has not been worked on yet see above message pausing for 30 seconds
+  pause:
+    seconds: 30
 
 - name: Checking for SATA Device 
   set_fact:

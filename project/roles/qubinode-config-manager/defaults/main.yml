@@ -17,6 +17,7 @@ instance_prefix: qbn
 product: ocp4
 admin_user: admin
 inventory_dir: "/home/{{ admin_user }}/qubinode-installer/inventory"
+vm_inventory_dir: "/home/{{ admin_user }}/qubinode-installer/project/host_vars"
 project_dir: "/home/{{ admin_user }}/qubinode-installer/"
 # Qubinode ssh user password secert
 admin_user_password: ""
