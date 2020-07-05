@@ -77,6 +77,10 @@ cd lib
 pip3 install -r lib/requirements.txt 
 cd ..
 ```
+## Set vault key 
+```
+openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
+```
 
 ### Qubinode Setup
 
@@ -97,7 +101,7 @@ cat >env/extravars<<EOF
 }
 EOF
 sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml
-rm extra_vars.json
+rm env/extra_vars.json
 ```
 
 

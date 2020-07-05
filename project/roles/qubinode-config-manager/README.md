@@ -45,7 +45,7 @@ ansible-playbook  project/qubinode-config-management.yml -e "@extra_vars.json"
 rm extra_vars.json
 ```
 
-2. Configure extravars
+2. Configure rhelX_host_vars
 ```
 ansible-playbook  project/qubinode-config-management.yml --extra-vars "collect_generic_info=true"
 ```
