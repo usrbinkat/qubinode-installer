@@ -3,7 +3,7 @@
   hosts: localhost
   become: yes
   vars_files:
-    - ../inventory/extravars_rhel8
+    - ../inventory/rhel8_host_vars
     - ../inventory/kvm_host.yml
     - ../inventory/passwords
 

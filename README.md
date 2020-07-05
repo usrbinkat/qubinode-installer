@@ -67,18 +67,7 @@ _Ansible_
 - [Ansible Essentials: Free Technical Overview (low-level introduction)](https://www.redhat.com/en/services/training/do007-ansible-essentials-simplicity-automation-technical-overview)
 - [(RH294) Linux Automation with Ansible](https://www.redhat.com/en/services/training/rh294-red-hat-system-administration-iii-linux-automation)
 
-## Contribute
-* [Communications](docs/qubinode/communication.md)
-
-
-If you would like to Contribute to the qubinode project please see the documentation below.  
-* [Qubinode WorkFlow Process](docs/qubinode/qubinode_git_branching_model.md)  
-* [Testing and Validation](test/README.md)  
-
-## Support
-If you have any direct questions, reach out to us [using the guide](docs/communication.md).
-
-## Known issues
+## Contribute/home/tosin/.ssh/known_hosts:3
 
 ## Roadmap
 * OCP 4.x Container Native Storage

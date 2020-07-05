@@ -36,7 +36,7 @@ Download and extract the qubinode-installer as a non root user.
 subscription-manager register
 ```
 ### Attach a specific subscription through the Customer Portal
- ```
+```
 subscription-manager refresh
 ```
   
@@ -52,7 +52,7 @@ sudo subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms --enab
 
 ### Install python3-pip ansible git vim 
  ```
-dnf install python3-pip ansible git vim -y 
+dnf install python3-pip ansible git vim  python3-devel -y 
 ```
 
 ## Clone the qubinode repo 
@@ -61,18 +61,45 @@ git clone https://github.com/tosin2013/qubinode-installer.git
 
 ```
 
+## CD into qubinode-installer folder
+```
+ cd qubinode-installer/
+```
+
 ## Switch to python-build branch
 ```
 git checkout python-build
 ```
 
+## Install python modules requirements
+```
+cd lib 
+pip3 install -r lib/requirements.txt 
+cd ..
+```
+
 ### Qubinode Setup
 
-The below commands ensure your system is setup as a KVM host.
-The qubinode-installer needs to run as a regular user.
+1. start with the configure_secerts.yml 
 ```
-python3 lib/
+cat >env/extravars<<EOF
+{
+   "configure_secerts": true,
+   "rhsm_username": "yourusername",
+   "rhsm_password": "changeme",
+   "rhsm_pass": "{{ rhsm_password }}",
+   "rhsm_org": "",
+   "rhsm_activationkey": "",
+   "admin_user_password": "changeme",
+   "idm_ssh_user": "yourusername",
+   "idm_dm_pwd": 'thisisaveryL0ngpaSSw0rd',
+   "idm_admin_pwd": "changeme"
+}
+EOF
+sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml
+rm extra_vars.json
 ```
+
 
 Install ansible roles 
 ```

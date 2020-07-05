@@ -1,7 +1,17 @@
-- name: Copying over extravars this will be used for generic variables 
+- name: Copying over rhel8_host_vars this will be used for generic variables on RHEL 8.x
   template:
-    src: templates/extravars_rhel8.j2
-    dest:  /{{ inventory_dir }}/extravars_rhel8
+    src: templates/rhel8_host_vars.j2
+    dest:  /{{ inventory_dir }}/rhel8_host_vars
     owner: admin
     group: admin
     mode: 0666
+  when: (ansible_distribution == "RedHat" and ansible_distribution_major_version == '7')
+
+- name: Copying over rhel7_host_vars this will be used for generic variables on RHEL 7.x
+  template:
+    src: templates/rhel7_host_vars.j2
+    dest:  /{{ inventory_dir }}/rhel7_host_vars
+    owner: admin
+    group: admin
+    mode: 0666
+  when: (ansible_distribution == "RedHat" and ansible_distribution_major_version == '7')
