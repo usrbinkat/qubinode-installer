@@ -60,49 +60,4 @@ JSON
 
 YAML
 ```
----
-ask_use_existing_idm: 'yes'
-vm_teardown: false 
-deploy_idm_server: 'yes'
-dns_server_vm:
-  dns_enable: true
-  dns_expand_os_disk: 'no'
-  dns_extra_storage: []
-  dns_gateway: '{{ vm_net_gateway | default('''', true) }}'
-  dns_group: dns
-  dns_ip: '{{ idm_server_ip | default('''', true) }}'
-  dns_mask: '{{ vm_net_netmask | default('''', true) }}'
-  dns_mask_prefix: '{{ kvm_host_mask_prefix | default(kvm_host_mask_prefix) }}'
-  dns_memory: 2048
-  dns_name: '{{ idm_hostname }}'
-  dns_recreate: false
-  dns_root_disk_size: 10G
-  dns_teardown: '{{ vm_teardown }}'
-  dns_vcpu: 2
-expand_os_disk: 'no'
-idm_admin_password: 'CHANGEME'
-idm_admin_user: admin
-idm_check_static_ip: ''
-idm_forward_ip: '{{ dns_forwarder }}'
-idm_hostname: 'qbn-dns01'
-idm_packages:
-  - ipa-server
-  - ipa-server-dns
-idm_public_ip: ''  - 1.168.192.in-addr.arpa
-  - 50.168.192.in-addr.arpa
-idm_realm: '{{ domain | upper }}'
-idm_repos:
-  - rhel-7-server-rpms
-  - rhel-7-server-extras-rpms
-  - rhel-7-server-optional-rpms
-idm_reverse_zones:
-  - 1.168.192.in-addr.arpa
-  - 50.168.192.in-addr.arpa
-idm_server_ip: 192.168.1.2
-idm_ssh_pwd: 'CHANGEME'
-idm_ssh_user: '{{ admin_user }}'
-idm_zone_overlap: false
-ipa_host: '{{ idm_hostname }}.{{ domain }}'
-qcow_rhel_release: 7
-rhel_release: 7
 ```

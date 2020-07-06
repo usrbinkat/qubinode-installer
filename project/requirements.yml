@@ -48,3 +48,6 @@
 
 - src: https://github.com/Qubinode/ocp4-bootstrap-webserver.git
   version: v2.4.0
+
+- src: https://github.com/tosin2013/ansible-role-yedit.git
+  version: master

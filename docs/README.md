@@ -86,6 +86,11 @@ openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
 /home/${USER}/.vaultkey
 ```
 
+## Generate SSHKEY
+```
+ssh-keygen
+```
+
 ### Qubinode Setup
 
 start with the configure_secerts.yml 
