@@ -142,7 +142,6 @@ sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml --ex
 
 Configure IDM server 
 ```
-
 sudo -E  python3 lib/qubinode_ansible_runner.py idm_vm_deployment.yml
 sudo -E  python3 lib/qubinode_ansible_runner.py idm_server.yml
 ```

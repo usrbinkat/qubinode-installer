@@ -1,13 +1,13 @@
 ---
 - name: deploy IdM server
-  hosts: dns
+  hosts: qbn-dns01
   remote_user: admin
   become: true
   vars_files:
-    - /home/admin/qubinode-installer/env/passwords
-    - /home/admin/qubinode-installer/env/extravars
-    - host_vars/kvm_host.yml
-    - host_vars/qbn-dns01
+    - ../inventory/rhel8_host_vars
+    - ../inventory/kvm_host.yml
+    - ../env/passwords
+    - host_vars/idm_dns.yml
 
   tasks:
     - name: Check if IdM is answering
