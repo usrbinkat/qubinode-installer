@@ -93,6 +93,11 @@ ssh-keygen
 
 ### Qubinode Setup
 
+Export Ansible Config 
+```
+export ANSIBLE_CONFIG="/home/admin/qubinode-installer/ansible.cfg"
+```
+
 start with the configure_secerts.yml 
 ```
 cat >env/extravars<<EOF
