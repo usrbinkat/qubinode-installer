@@ -76,7 +76,7 @@ tower_rabbitmq_password: ""
 
 # VM Options 
 vm_teardown: false # defaulting to false 
-cloud_init_vm_image: rhel-server-7.8-x86_64-kvm.qcow2
+cloud_init_vm_image: "{{ qcow_rhel_name }}"
 
 # RHEL SERVER Defaults
 rhel_server_vm:

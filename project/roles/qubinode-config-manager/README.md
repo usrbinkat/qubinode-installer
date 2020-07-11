@@ -84,7 +84,7 @@ cat >extra_vars.json<<EOF
     "rhel_root_disk_size": "20G",
     "rhel_vcpu": 1,
    "rhel_memory": 800,
-   "rhel_name": "rhel_example",
+   "rhel_name": "rhel7_example",
    "update_etc_resolv": "no",
    "vm_root_disk_size": "{{ rhel_server_vm.rhel_root_disk_size }}"
 }

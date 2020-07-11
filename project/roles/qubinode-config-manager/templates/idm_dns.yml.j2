@@ -32,8 +32,8 @@ idm_repos:
   - rhel-7-server-extras-rpms
   - rhel-7-server-optional-rpms
 idm_reverse_zones:
-  - {{ kvm_host_ip | ipaddr('revdns')}}
-  - {{ '192.168.50.1' | ipaddr('revdns')}}
+  - {{ kvm_host_ip.split('.')[2] }}.{{ kvm_host_ip.split('.')[1] }}.{{ kvm_host_ip.split('.')[0]}}.in-addr.arpa.
+  - {{ '192.168.50' | ipaddr('revdns')}}
 idm_server_ip: ""
 idm_zone_overlap: false
 ipa_host: '{{ idm_hostname }}.{{ domain }}'

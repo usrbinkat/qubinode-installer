@@ -115,7 +115,7 @@ cat >env/extravars<<EOF
 }
 EOF
 sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml
-rm env/extra_vars.json
+rm env/extra_vars
 ```
 
 Configure rhelX_host_vars
@@ -138,18 +138,63 @@ Configure KVM host
 ```
 sudo -E  python3 lib/qubinode_ansible_runner.py setup_kvmhost.yml
 ```
-
-Configure IDM  variables
-```
-sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml --extravars '{ "configure_idm_info": true}'
-```
-
+cp qubinode-configs/passwords/extravars env/extra_vars
+sudo -E python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml
+rm env/extra_vars
 
 Configure IDM server 
 ```
 sudo -E  python3 lib/qubinode_ansible_runner.py idm_vm_deployment.yml
 sudo -E  python3 lib/qubinode_ansible_runner.py idm_server.yml
 ```
+
+Get idm information script WIP
+```
+python3 lib/qubinode_status_checker.py idm  qbn-dns01.example.lab
+```
+
+Deploy RHEL 7 Server
+```
+rm env/extravars
+cat >env/extravars<<EOF
+{
+   "cloud_init_vm_image": "rhel-server-7.8-x86_64-kvm.qcow2",
+   "vm_teardown": false,
+   "vm_recreate": false,
+   "configure_rhel_vm_info": true,
+   "expand_os_disk": "no",
+   "rhel_7_hash": null,
+   "rhel_8_hash": null,
+   "rhel_release": 7,
+    "rhel_enable": true,
+    "rhel_extra_storage": [
+       {
+          "enable": false,
+          "size": ""
+       }
+    ],
+    "rhel_group": "rhel",
+    "rhel_recreate": false,
+    "rhel_root_disk_size": "20G",
+    "rhel_vcpu": 1,
+   "rhel_memory": 800,
+   "rhel_name": "rhel7_example",
+   "update_etc_resolv": "no",
+   "vm_root_disk_size": "{{ rhel_server_vm.rhel_root_disk_size }}"
+}
+EOF
+sudo python3 lib/qubinode_ansible_runner.py  qubinode-config-management.yml
+
+rm env/extravars
+sudo -E python3 lib/qubinode_ansible_runner.py  rhel.yml --extravars '{ "rhel_name": "rhel7_example"}'
+
+# To tear down server
+sudo -E  python3 lib/qubinode_ansible_runner.py  rhel.yml --extravars '{"rhel_name": "rhel7_example", "vm_teardown": true} '
+```
+
+Deploy RHEL 8 Server
+
+Deploy Fedora Server. 
 
 ## Deploy a Red Hat Product
 
