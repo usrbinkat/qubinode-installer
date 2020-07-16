@@ -19,8 +19,8 @@
 - src: https://github.com/tosin2013/openshift-inventory.git
   version: master
 
-- src: https://github.com/amalivert/edge_hosts_validate.git
-  version: master
+- src: https://github.com/Qubinode/edge_hosts_validate.git
+  version: dev
 
 - src: https://github.com/tosin2013/ocp-power-management.git
   version: master
