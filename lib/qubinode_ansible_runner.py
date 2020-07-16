@@ -34,7 +34,7 @@ def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
         print(each_host_event['event'])
     print("Final status:")
     print(r.stats)
-    print(r.stats.failures)
+    #print(r.stats.failures) #need to test this
   
 
 def main():

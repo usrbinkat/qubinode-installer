@@ -1,9 +1,14 @@
-- debug:
-    msg: "TODO: Add auto detection as secondray storage  for nvme0n1 or other types of stroage"
+- name: Checking for nvme0n1 Device 
+  set_fact:
+    nvmedevice_name: "{{ item.key }}"
+  no_log: False
+  with_dict: "{{ ansible_devices }}"
+  when: "item.value.host.startswith('Non-Volatile memory controller')"
 
-- name: nvme0n1 has not been worked on yet see above message pausing for 30 seconds
-  pause:
-    seconds: 30
+
+- name: show only device name
+  debug: var=nvmedevice_name
+  when: kvm_host_libvirt_extra_disk | length == 0
 
 - name: Checking for SATA Device 
   set_fact:
@@ -25,8 +30,14 @@
      libvirt_dev: "{{ device_name }}"
      kvm_host_libvirt_extra_disk: ""
      create_lvm: no
-  when: kvm_host_libvirt_extra_disk | length == 0  
+  when: nvmedevice_name | length == 0  
 
+- name: updating kvm_host_libvirt_extra_disk variable for server with nvme0n1
+  set_fact:
+     libvirt_dev: "{{ nvmedevice_name }}"
+     kvm_host_libvirt_extra_disk: ""
+     create_lvm: no
+  when: nvmedevice_name | length != 0  
 
 - name: Refresh inventory to ensure new instances exist in inventory
   meta: refresh_inventory
