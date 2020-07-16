@@ -5,7 +5,7 @@
   vars_files:
     - ../inventory/rhel8_host_vars
     - ../inventory/kvm_host.yml
-    - ../inventory/passwords
+    - ../env/passwords
 
   tasks:
     - name: ensure backup folder is created
