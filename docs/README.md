@@ -52,7 +52,7 @@ sudo subscription-manager repos --enable=rhel-8-for-x86_64-appstream-rpms --enab
 
 ### Install python3-pip ansible git vim 
  ```
-dnf install python3-pip ansible git vim  python3-devel -y 
+dnf install python3-pip ansible git vim  python3-devel gcc -y 
 ```
 
 ## Clone the qubinode repo 
@@ -73,9 +73,7 @@ git checkout python-build
 
 ## Install python modules requirements
 ```
-cd lib 
-pip3 install -r lib/requirements.txt 
-cd ..
+pip3 install -r lib/requirements-to-freeze.txt
 ```
 ## Set vault key 
 ```
@@ -88,7 +86,7 @@ openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
 
 ## Generate SSHKEY
 ```
-ssh-keygen
+ssh-keygen -f "/home/${USER}/.ssh/id_rsa" -q -N ''
 ```
 
 ### Qubinode Setup
