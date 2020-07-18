@@ -2,6 +2,7 @@
 - name: setup KVM host
   hosts: localhost
   become: yes
+  gather_facts: true
   vars_files:
     - ../inventory/rhel8_host_vars
     - ../inventory/kvm_host.yml

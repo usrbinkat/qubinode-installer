@@ -21,9 +21,9 @@ def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
     r = ansible_runner.run(private_data_dir='/home/admin/qubinode-installer', playbook=playbook_path,verbosity=level, extravars={'vm_teardown': destroy})
     print("{}: {}".format(r.status, r.rc))
     # successful: 0
-    if verbose:
-      for each_host_event in r.events:
-        print(each_host_event['event'])
+    #if verbose:
+    #  for each_host_event in r.events:
+    #    print(each_host_event['event'])
     print("Final status:")
     print(r.stats)
     print("error code: "+str(r.rc))
@@ -33,9 +33,9 @@ def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
     r = ansible_runner.run(private_data_dir='/home/admin/qubinode-installer', playbook=playbook_path,verbosity=level, extravars=json.loads(extra_vars))
     print("{}: {}".format(r.status, r.rc))
     # successful: 0
-    if verbose:
-      for each_host_event in r.events:
-        print(each_host_event['event'])
+    #if verbose:
+    #  for each_host_event in r.events:
+    #    print(each_host_event['event'])
     print("Final status:")
     print(r.stats)
     print("error code: "+str(r.rc))
