@@ -10,7 +10,7 @@
     - ../inventory/kvm_host.yml
     - ../env/passwords
     - host_vars/idm_dns.yml
-    
+
   vars:
     vm_name: "{{ dns_server_vm.dns_name }}"
     vm_cpu: "{{ dns_server_vm.dns_vcpu }}"
@@ -43,7 +43,8 @@
         state: present
       when: not vm_teardown|bool
 
-    - set_fact:
+    - name: setting fact for idm vm teardown
+      set_fact:
         etc_host_status: "{{ 'absent' if vm_teardown|bool else 'present' }}"
 
     - name: Add/Remove DNS server from inventory into /etc/hosts
@@ -55,3 +56,4 @@
       when: hostvars[item]['ansible_host'] is defined and hostvars[item]['inventory_hostname_short'] == vm_name
       with_items:
         - "{{ groups['qbn-dns01'] }}"
+

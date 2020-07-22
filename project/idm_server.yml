@@ -22,7 +22,8 @@
       ignore_errors: yes
       tags: [always]
 
-    - set_fact:
+    - name: Set idm_is_installed fact
+      set_fact:
         idm_is_installed: "{{ False if idm_is_installed.failed | default(False) or idm_is_installed.status != 200 else True }}"
       tags: [always]
 
@@ -66,11 +67,13 @@
       ignore_errors: yes
       tags: [always]
 
-    - set_fact:
+    - name: exit if idm installed failed
+      set_fact:
         idm_is_installed: "{{ False if idm_is_installed.failed | default(False) or idm_is_installed.status != 200 else True }}"
       tags: [always]
 
-    - fail:
+    - name: fail if IDM server is not installed
+      fail:
         msg: |
           The IDM server does not appear to have been installed.
           Please re-run qubinode-installer or undeploy and start again.
@@ -124,4 +127,5 @@
         follow: yes
       when: vm_teardown|bool and not resolv_backup.stat.exists and not idm_is_installed|bool
       delegate_to: 127.0.0.1
+
 
