@@ -35,6 +35,7 @@ New Features |
 -- |
 NFS Server fixes |
 NFS Server is installed by default |
+Developer Account Fixes |
 
 
 See [Release Document](docs/qubinode/releases.md) for features history.
