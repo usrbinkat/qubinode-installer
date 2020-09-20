@@ -40,7 +40,10 @@ function ask_for_vault_values () {
 }
 
 function ask_user_input () {
+
     idm_server_ip=$(awk '/^idm_server_ip:/ {print $2;exit}' "${idm_vars_file}" |tr -d '"')
+    idm_server_ip=""
+
     user_input_complete=$(awk '/^user_input_complete:/ {print $2;exit}' "${project_dir}/playbooks/vars/all.yml" |tr -d '"')
     if [ "A${teardown}" != "Atrue" ]
     then 
@@ -54,11 +57,14 @@ function ask_user_input () {
             printf "%s\n\n" "   ${grn}./qubinode-installer -m clean${end}"
             printf "%s\n" " ${cyn}  Running ${end}${yel}./qubinode-installer -m clean${end} ${cyn}removes all configuration data.${end}"
             printf "%s\n\n" "   ${cyn}This effectively resets the installation progress.${end}"
-            ask_for_vault_values "${vault_vars_file}"
+
+            ask_for_vault_values "${vault_vars_file}" "${vars_file}"
             ask_user_for_networking_info "${vars_file}"
             ask_user_for_idm_domain
             #ask_user_for_idm_password
             ask_user_for_custom_idm_server
+            echo  "${vars_file} TEST"
+            echo  "${project_dir}/playbooks/vars/all.yml"
             sed -i "s/^user_input_complete:.*/user_input_complete: yes/g" "${project_dir}/playbooks/vars/all.yml"
         fi
     fi

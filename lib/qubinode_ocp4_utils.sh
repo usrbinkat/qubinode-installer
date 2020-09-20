@@ -3,7 +3,7 @@
 function openshift4_variables () {
 
     # Set product variables file
-    if [ "A${product_opt}" == "Aokd4" ]
+    if [ "A${product_opt:-default}" == "Aokd4" ]
     then
         product_samples_vars_file=${project_dir}/samples/okd4.yml
         ocp_vars_file=${project_dir}/playbooks/vars/okd4.yml
@@ -189,12 +189,6 @@ function openshift4_prechecks () {
     #curl -sOL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/release.txt
     #current_version=$(cat release.txt | grep Name:  |  awk '{print $2}')
     #sed -i "s/^ocp4_release:.*/ocp4_release: ${current_version}/"   "${ocp_vars_file}"
-
-    # Ensure Openshift Subscription Pool is attached
-    if [ "A${product_opt}" != "Aokd4" ]
-    then
-        check_for_openshift_subscription $ocp_vars_file
-    fi
 }
 
 

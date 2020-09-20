@@ -21,6 +21,18 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Ansible ${{ matrix.ansible-version }}
       run: |
+        apt-get install shellcheck
+    - name: Testing all files in lib against shellcheck
+      run: |
+        #!/bin/bash
+        FILES=lib/*
+        for f in $FILES
+        do
+          echo "shellcheck $f file..."
+          shellcheck $f
+        done
+    - name: Install Ansible ${{ matrix.ansible-version }}
+      run: |
         python -m pip install --upgrade pip
         pip install ansible-lint==${{ matrix.lint-version }} ansible==${{ matrix.ansible-version }}
     - name: Lint playbook

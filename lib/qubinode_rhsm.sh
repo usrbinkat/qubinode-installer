@@ -6,35 +6,58 @@ function check_rhsm_status () {
     then
         echo "Skipping checking RHSM status"
     else 
-        sudo subscription-manager identity > /dev/null 2>&1
-        RESULT="$?"
-        if [ "A${RESULT}" == "A1" ]
-        then
+        { # try
+
+            sudo subscription-manager identity > /dev/null 2>&1
+            RESULT="$?"
+            if [ "A${RESULT}" == "A1" ]
+            then
+                printf "%s\n" " ${red}This system is not yet registered to Red Hat.${end}"
+                printf "%s\n\n" " Please check your server status for ${HOSTNAME} at : ${grn}https://access.redhat.com/management/systems${end}"
+                printf "%s\n\n" " Please run: ${grn}./qubinode-installer -m clean && ./qubinode-installer -m rhsm${end}"
+                exit 1
+            fi
+        } || { # catch
             printf "%s\n" " ${red}This system is not yet registered to Red Hat.${end}"
-            printf "%s\n\n" " Please run: ${grn}qubinode-installer -m rhsm${end}"
+            printf "%s\n\n" " Please check your server status for ${HOSTNAME} at : ${grn}https://access.redhat.com/management/systems${end}"
+            printf "%s\n\n" " Please run: ${grn}./qubinode-installer -m clean && ./qubinode-installer -m rhsm${end}"
             exit 1
-        fi
+        }
 
-        status_result=$(mktemp)
-        sudo subscription-manager status > "${status_result}" 2>&1
-        status=$(awk -F: '/Overall Status:/ {print $2}' "${status_result}"|sed 's/^ *//g')
-        if [ "A${status}" != "ACurrent" ]
-        then
-            sudo subscription-manager refresh > /dev/null 2>&1
-            sudo subscription-manager attach --auto > /dev/null 2>&1
-        fi
+        
 
-        #check again
-        sudo subscription-manager status > "${status_result}" 2>&1
-        status=$(awk -F: '/Overall Status:/ {print $2}' "${status_result}"|sed 's/^ *//g')
-        if [ "A${status}" != "ACurrent" ]
-        then
-            printf "%s\n" " Cannot determine the subscription status of ${yel}$(hostname)${end}"
-            printf "%s\n" " Error details are: "
-            cat "${status_result}"
-            printf "%s\n\n" " Please resolved and try again"
-            exit 1
-        fi
+
+         { # try
+            status_result=$(mktemp)
+            sudo subscription-manager status > "${status_result}" 2>&1
+            status=$(awk -F: '/Overall Status:/ {print $2}' "${status_result}"|sed 's/^ *//g')
+            if [ "A${status}" != "ACurrent" ]
+            then
+                sudo subscription-manager refresh > /dev/null 2>&1
+                sudo subscription-manager attach --auto > /dev/null 2>&1
+            fi
+        } || { # catch
+              printf "%s\n" " ${red}This system is not yet registered to Red Hat.${end}"
+              printf "%s\n\n" " Please check your server status for ${HOSTNAME} at : ${grn}https://access.redhat.com/management/systems${end}"
+              printf "%s\n\n" " Please run: ${grn}./qubinode-installer -m clean && ./qubinode-installer -m rhsm${end}"
+              exit 1
+        }
+       
+         { # try
+            status_result=$(mktemp)
+            sudo subscription-manager status > "${status_result}" 2>&1
+            status=$(awk -F: '/Overall Status:/ {print $2}' "${status_result}"|sed 's/^ *//g')
+             if [ "A${status}" != "ACurrent" ]
+            then
+                sudo subscription-manager refresh > /dev/null 2>&1
+                sudo subscription-manager attach --auto > /dev/null 2>&1
+            fi
+        } || { 
+              printf "%s\n" " ${red}This system is not yet registered to Red Hat.${end}"
+              printf "%s\n\n" " Please check your server status for ${HOSTNAME} at : ${grn}https://access.redhat.com/management/systems${end}"
+              printf "%s\n\n" " Please run: ${grn}./qubinode-installer -m clean && ./qubinode-installer -m rhsm${end}"
+              exit 1
+        }
     fi
 }
 
@@ -124,8 +147,14 @@ function qubinode_rhsm_register () {
         # load kvmhost variables
         kvm_host_variables
  
-        IS_REGISTERED_tmp=$(mktemp)
-        sudo subscription-manager identity > "${IS_REGISTERED_tmp}" 2>&1
+
+        { # try
+
+            IS_REGISTERED_tmp=$(mktemp)
+            sudo subscription-manager identity > "${IS_REGISTERED_tmp}" 2>&1
+        } || { # catch
+            echo "system is not registered"
+        }
     
         # decrypt ansible vault
         decrypt_ansible_vault "${vault_vars_file}" > /dev/null 2>&1
@@ -153,39 +182,69 @@ function qubinode_rhsm_register () {
     
         encrypt_ansible_vault "${vault_vars_file}" > /dev/null 2>&1
     
-        IS_REGISTERED=$(grep -o 'This system is not yet registered' "${IS_REGISTERED_tmp}")
-        if [ "A${IS_REGISTERED}" == "AThis system is not yet registered" ]
-        then
-            check_for_dns subscription.rhsm.redhat.com
-            printf "%s\n" ""
-            printf "%s\n" " ${rhsm_msg}"
-            rhsm_reg_result=$(mktemp)
-            local rhsm_rhel_major=$(sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release)
-            if [ "A${rhsm_rhel_major}" == "A8" ]
-            then
-               RHEL_RELEASE=$(awk '/rhel8_version:/ {print $2}' "${vars_file}")
-            elif [ "A${rhsm_rhel_major}" == "A7" ]
-            then
-               RHEL_RELEASE=$(awk '/rhel7_version:/ {print $2}' "${vars_file}")
-            else
-                RHEL_RELEASE=$(cat /etc/redhat-release | grep -o [7-8].[0-9])
-            fi
+        
+        
+        { # try
 
-            echo sudo subscription-manager register "${rhsm_cmd_opts}" --force --release="'${RHEL_RELEASE}'"|sh > "${rhsm_reg_result}" 2>&1
-            RESULT="$?"
-            if [ ${RESULT} -eq 0 ]
+            IS_REGISTERED_tmp=$(mktemp)
+            sudo subscription-manager  identity > "${IS_REGISTERED_tmp}" 2>&1
+            IS_REGISTERED=$(grep -o 'This system is not yet registered' "${IS_REGISTERED_tmp}")
+
+            if [ "A${IS_REGISTERED}" == "AThis system is not yet registered" ]
             then
-                printf "%s\n\n" "  ${yel}Successfully registered $(hostname) to RHSM${end}"
+                check_for_dns subscription.rhsm.redhat.com
+                printf "%s\n" ""
+                printf "%s\n" " ${rhsm_msg}"
+                rhsm_reg_result=$(mktemp)
+                local rhsm_rhel_major=$(sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release)
+                if [ "A${rhsm_rhel_major}" == "A8" ]
+                then
+                RHEL_RELEASE=$(awk '/rhel8_version:/ {print $2}' "${vars_file}")
+                elif [ "A${rhsm_rhel_major}" == "A7" ]
+                then
+                RHEL_RELEASE=$(awk '/rhel7_version:/ {print $2}' "${vars_file}")
+                else
+                    RHEL_RELEASE=$(cat /etc/redhat-release | grep -o [7-8].[0-9])
+                fi
+
+                
+                { # try
+
+                echo sudo subscription-manager register "${rhsm_cmd_opts}" --force --release="'${RHEL_RELEASE}'"|sh > "${rhsm_reg_result}" 2>&1
+                RESULT="$?"
+                } || { # catch
+                    RESULT="$?"
+                }
+        
+                if [ ${RESULT} -eq 0 ]
+                then
+                    printf "%s\n\n" "  ${yel}Successfully registered $(hostname) to RHSM${end}"
+                else
+                    printf "%s\n" " ${red}$(hostname) registration to RHSM was unsuccessfull.${end}"
+                    echo "%s\n" " ${red}See Error message below.${end}"
+                    cat "${rhsm_reg_result}"
+                    echo "%s\n" " ${yel}Run the ./qubinode-installer -m clean command and try again.${end}"
+                fi
+            elif grep -o 'has been deleted' "${IS_REGISTERED_tmp}";
+            then 
+               cat "${IS_REGISTERED_tmp}"
+               printf "%s\n" " ${yel}Refreshing  and cleaning system and trying again${end}"
+               
+               sudo subscription-manager clean > /dev/null 2>&1
+               sudo subscription-manager refresh > /dev/null 2>&1
+               sleep 10s 
+               qubinode_rhsm_register
+
             else
-                printf "%s\n" " ${red}$(hostname) registration to RHSM was unsuccessfull.${end}"
-                cat "${rhsm_reg_result}"
+                # this variables isn't being used at the moment
+                system_already_registered=yes
+                #printf "%s\n" " ${yel}$(hostname)${end} ${blu}is already registered${end}"
             fi
-        else
-            # this variables isn't being used at the moment
-            system_already_registered=yes
-            #printf "%s\n" " ${yel}$(hostname)${end} ${blu}is already registered${end}"
+        } || { # catch
+           check_rhsm_status
+        }
+
         fi
-    fi
 
     # Check for RHSM values
     if [[ -f ${vault_vars_file} ]] && [[ -f /usr/bin/ansible-vault ]]
@@ -214,7 +273,7 @@ function get_rhsm_user_and_pass () {
         printf "%s\n\n" ""
         echo -n "   ${blu}Enter your RHSM username and press${end} ${grn}[ENTER]${end}: "
         read rhsm_username
-        sed -i "s/rhsm_username: \"\"/rhsm_username: "$rhsm_username"/g" "${vaulted_file}"
+        sed -i "s/rhsm_username: \"\"/rhsm_username: "${rhsm_username}"/g" "${vault_vars_file}"
     fi
 
     if grep '""' "${vault_vars_file}"|grep -q rhsm_password
@@ -223,7 +282,7 @@ function get_rhsm_user_and_pass () {
         echo -n "   ${blu}Enter your RHSM password and press${end} ${grn}[ENTER]${end}: "
         read_sensitive_data
         rhsm_password="${sensitive_data}"
-        sed -i "s/rhsm_password: \"\"/rhsm_password: "$rhsm_password"/g" "${vaulted_file}"
+        sed -i "s/rhsm_password: \"\"/rhsm_password: "${rhsm_password}"/g" "${vault_vars_file}"
         printf "%s\n" ""
     fi
 }

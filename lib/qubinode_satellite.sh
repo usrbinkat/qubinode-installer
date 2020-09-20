@@ -7,7 +7,13 @@ test -f "${SATELLITE_VARS_FILE}" || cp "${SAMPLE_VARS_FILE}" "${SATELLITE_VARS_F
 PREFIX=$(awk '/^instance_prefix:/ {print $2}' $project_dir/playbooks/vars/all.yml)
 SUFFIX=$(awk '/^hostname_suffix:/ {print $2}' "${SATELLITE_VARS_FILE}")
 SATELLITE_SERVER_NAME="${PREFIX}-${SUFFIX}"
-SATELLITE_SERVER_IP=$(awk -v var="${SATELLITE_SERVER_NAME}" '$0 ~ var {print $2}' "${project_dir}/inventory/hosts" |grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
+{ # try
+   SATELLITE_SERVER_IP=$(awk -v var="${SATELLITE_SERVER_NAME}" '$0 ~ var {print $2}' "${project_dir}/inventory/hosts" |grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
+
+} || { # catch
+    printf "%s\n" "   ${red}Skipping SATELLITE_SERVER_IP setting.${end}"
+}
+
 ANSIBLE_VERSION=$(awk '/^ansible_release:/ {print $2}' $project_dir/playbooks/vars/all.yml)
 
 # Playbooks

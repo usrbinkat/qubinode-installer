@@ -42,7 +42,7 @@ function qubinode_required_prereqs () {
     fi
 
     # copy sample ocp3 file to playbook/vars directory
-    if [ "A${qubinode_product_opt}" == "Aocp3" ]
+    if [ "A${qubinode_product_opt-skip}" == "Aocp3" ]
     then
         if [ ! -f "${ocp3_vars_file}" ]
         then
@@ -51,7 +51,7 @@ function qubinode_required_prereqs () {
     fi
 
     # copy sample okd3 file to playbook/vars directory
-    if [ "A${qubinode_product_opt}" == "Aokd3" ]
+    if [ "A${qubinode_product_opt-skip}" == "Aokd3" ]
     then
         if [ ! -f "${okd3_vars_file}" ]
         then
@@ -127,9 +127,9 @@ function setup_variables () {
 }
 
 function get_rhel_version() {
-  if cat /etc/redhat-release  | grep 8.[0-9] > /dev/null 2>&1; then
+  if cat /etc/redhat-release  | grep '8.[0-9]' > /dev/null 2>&1; then
     echo "RHEL8"
-  elif cat /etc/redhat-release  | grep 7.[0-9] > /dev/null 2>&1; then
+  elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
     echo  "RHEL7"
   else
     echo "Operating System not supported"
@@ -145,9 +145,9 @@ function qcow_check () {
     qcow_image_name=$(grep "qcow_rhel${rhel_major}_name:" "${project_dir}/playbooks/vars/all.yml"|awk '{print $2}')
 
     # update IdM server with qcow image file
-    if [ -f $idm_vars_file ]
+    if [ -f ${idm_vars_file} ]
     then
-        sed -i "s/^cloud_init_vm_image:.*/cloud_init_vm_image: $qcow_image_name/g" $idm_vars_file
+        sed -i "s/^cloud_init_vm_image:.*/cloud_init_vm_image: $qcow_image_name/g" ${idm_vars_file}
     fi
 
 
@@ -178,7 +178,13 @@ function install_rhsm_cli () {
         cd rhsm-api-client
         pip install -r requirements.txt > /dev/null 2>&1
         python setup.py install --record files.txt > /dev/null 2>&1
-        deactivate
+            { # try
+                deactivate
+
+        } || { # catch
+            printf "%s\n" "   ${red}Skipping deactivate command.${end}"
+        }
+        
         cd "${project_dir}"
     fi
 }
@@ -250,7 +256,7 @@ setup_download_options () {
         artifact_string="the $artifact_qcow_image image"
     fi
 
-    if  [[ "A${PULL_MISSING}" == "Ayes" ]] || [[ "A${QCOW_MISSING}" == "Ayes" ]]
+    if  [[ "A${PULL_MISSING:-default}" == "Ayes" ]] || [[ "A${QCOW_MISSING:-default}" == "Ayes" ]]
     then
         installer_artifacts_msg
         exit 1
@@ -326,11 +332,12 @@ download_files () {
 
     if [[ "A${TOKEN_STATUS}" == "Aexist" ]] && [[ "A${DWL_QCOW}" == "Ayes" ]]
     then
-        # save token to config file
-        if [ ! -f $RHSM_CLI_CONFIG ]
+
+                # save token to config file
+        if [ ! -f "$RHSM_CLI_CONFIG" ]
         then
             TOKEN=$(cat $RHSM_TOKEN)
-            $RHSM_CLI_CMD -t $TOKEN savetoken 2>/dev/null
+            $RHSM_CLI_CMD -t "$TOKEN" savetoken 2>/dev/null
             if [ $? -ne 0 ]
             then
                 printf "%s\n" "    Failure validating token provided by $RHSM_TOKEN"
@@ -341,19 +348,19 @@ download_files () {
                 printf "%s\n\n" "    the required files."
                 exit
             else
-                rm -f $RHSM_TOKEN
+                rm -f "$RHSM_TOKEN"
             fi
         fi
 
-        if [ -f $RHSM_CLI_CONFIG ]
+        if [ -f "$RHSM_CLI_CONFIG" ]
         then
             if [ "A${qcow_image_checksum}" != "A" ]
             then
-                $RHSM_CLI_CMD images --checksum $qcow_image_checksum 2>/dev/null
-                if [ -f ${project_dir}/${qcow_image_name} ]
+                $RHSM_CLI_CMD images --checksum "$qcow_image_checksum" 2>/dev/null
+                if [ -f "${project_dir}"/"${qcow_image_name}" ]
                 then
-                    DWLD_CHECKSUM=$(sha256sum ${project_dir}/${qcow_image_name}|awk '{print $1}')
-                    if [ $DWLD_CHECKSUM != $qcow_image_checksum ]
+                    DWLD_CHECKSUM=$(sha256sum "${project_dir}"/"${qcow_image_name}"|awk '{print $1}')
+                    if [ "$DWLD_CHECKSUM" != "$qcow_image_checksum" ]
                     then
                         echo "The downloaded $qcow_image_name validation fail"
                         exit 1

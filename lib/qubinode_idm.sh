@@ -2,6 +2,7 @@
 
 setup_variables
 IDM_VM_PLAY="${project_dir}/playbooks/idm_vm_deployment.yml"
+vaultfile="${project_dir}/playbooks/vars/vault.yml"
 product_in_use=idm
 idm_vars_file="${project_dir}/playbooks/vars/idm.yml"
 # Check if we should setup qubinode
@@ -13,6 +14,7 @@ idm_srv_hostname="$prefix-$suffix"
 idm_srv_fqdn="$prefix-$suffix.$domain"
 idm_server_ip=$(awk '/idm_server_ip:/ {print $2;exit}' "${idm_vars_file}" |tr -d '"')
 idm_admin_user=$(awk '/idm_admin_user:/ {print $2;exit}' "${idm_vars_file}" |tr -d '"')
+
 
 # Set the VM OS release to match the host system
 sed -i "s/^rhel_major:.*/rhel_major: $rhel_major/g" $idm_vars_file
@@ -47,7 +49,7 @@ function ask_user_for_idm_domain () {
         printf "%s\n\n" ""
         printf "%s\n" "   By default the forwarder for external DNS queries are sent to 1.1.1.1."
         printf "%s\n\n" "   If you would like to use a different upstream DNS server enter it below."
-        read -p "   ${blu}Enter an upstream DNS server or press${end} ${yel}[ENTER]${end} ${mag}for the default${end} ${blue}[1.1.1.1]: ${end}" dns_forwarder
+        read -p "   ${blu}Enter an upstream DNS server or press${end} ${yel}[ENTER]${end} ${mag}for the default${end} ${blu}[1.1.1.1]: ${end}" dns_forwarder
         dns_forwarder=${dns_forwarder:-1.1.1.1}
         sed -i "s/dns_forwarder: \"\"/dns_forwarder: "$dns_forwarder"/g" "${varsfile}"
     fi
@@ -55,25 +57,15 @@ function ask_user_for_idm_domain () {
 
 function ask_user_for_idm_password () {
     # This is the password used to log into the IDM server webconsole and also the admin user
-    #if grep '""' "${vaultfile}"|grep -q idm_admin_pwd
-    idm_admin_pwd=$(ansible-vault view ${vaultfile}|awk '/idm_admin_pwd:/ {print $2;exit}')
-    if [ "A${idm_admin_pwd}" == 'A""' ];
+
+
+    if [ -f /usr/bin/ansible-vault ]; then  idm_admin_pwd=$(ansible-vault view ${vaultfile}|awk '/idm_admin_pwd:/ {print $2;exit}'); else idm_admin_pwd=''; fi
+    if [ "A${idm_admin_pwd}" == 'A' ];
     then
         unset idm_admin_pwd
-        while [[ ${#idm_admin_pwd} -lt 8 ]]
-        do
-            printf "%s\n" ""
-            printf "%s\n\n" "   Your username ${yel}${CURRENT_USER}${end} will be use as the admin user."
-            printf "%s" "   ${blu}Enter a password to be set for the IdM admin user and press${end} ${grn}[ENTER]${end}: "
-            read_sensitive_data
-            idm_admin_pwd="${sensitive_data}"
-            if [ ${#idm_admin_pwd} -lt 8 ]
-            then
-                printf "%s\n" ""
-                printf "%s\n\n" "    ${red}**IMPORTANT**${end}"
-                printf "%s\n" "  The password must be at least ${yel}8${end} characters long."
-            fi
-        done
+        read_sensitive_data
+        idm_admin_pwd="${sensitive_data}"
+        
         decrypt_ansible_vault "${vaultfile}" > /dev/null
         sed -i "s/idm_admin_pwd: \"\"/idm_admin_pwd: "$idm_admin_pwd"/g" "${vaultfile}"
         echo ""

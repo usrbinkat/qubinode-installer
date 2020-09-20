@@ -5,7 +5,13 @@ function kvm_host_variables () {
     vars_file="${project_dir}/playbooks/vars/all.yml"
     libvirt_pool_name=$(cat "${kvm_host_vars_file}" | grep libvirt_pool_name: | awk '{print $2}')
     host_completed=$(awk '/qubinode_installer_host_completed:/ {print $2;exit}' ${kvm_host_vars_file})
-    RHEL_RELEASE=$(awk '/rhel_release:/ {print $2}' ${kvm_host_vars_file} |grep [0-9])
+    { # try
+        RHEL_RELEASE=$(awk '/rhel_release:/ {print $2}' ${kvm_host_vars_file} |grep [0-9])
+    } || { # catch
+        RHEL_RELEASE="UNKNOWN"
+    }
+
+    
     QUBINODE_SYSTEM=$(awk '/run_qubinode_setup:/ {print $2; exit}' ${kvm_host_vars_file} | tr -d '"')
     vg_name=$(cat "${kvm_host_vars_file}"| grep vg_name: | awk '{print $2}')
     requested_brigde=$(cat "${kvm_host_vars_file}"|grep  vm_libvirt_net: | awk '{print $2}' | sed 's/"//g')
@@ -275,7 +281,12 @@ function qubinode_system_auto_install () {
 # Ensure RHEL is set to the supported release
 function set_rhel_release () {
     qubinode_required_prereqs
-    RHEL_RELEASE=$(awk '/rhel_release/ {print $2}' "${kvm_host_vars_file}" |grep [0-9])
+    kvm_host_variables
+    if [ ${RHEL_RELEASE} == "UNKNOWN" ]
+    then
+      echo "RHEL Verion is unknown"
+      exit 1
+    fi
     RELEASE="Release: ${RHEL_RELEASE}"
     CURRENT_RELEASE=$(sudo subscription-manager release --show)
 
@@ -452,8 +463,15 @@ function qubinode_networking () {
 
 kvm_host_health_check () {
     KVM_IN_GOOD_HEALTH=""
+    KVM_STATUS="ready"
     requested_nat=$(cat ${vars_file}|grep  cluster_name: | awk '{print $2}' | sed 's/"//g')
-    check_image_path=$(cat ${vars_file}| grep kvm_host_libvirt_dir: | awk '{print $2}')
+    
+    { # try
+        check_image_path=$(cat ${kvm_host_vars_file}| grep kvm_host_libvirt_dir: | awk '{print $2}')
+    } || { # catch
+        printf "%s\n" "   ${red}Skipping check_image_path setting.${end}"
+    }
+
     requested_brigde=$(awk '/^vm_libvirt_net:/ {print $2;exit}' "${project_dir}/playbooks/vars/kvm_host.yml")
     libvirt_dir=$(awk '/^kvm_host_libvirt_dir/ {print $2}' "${project_dir}/playbooks/vars/kvm_host.yml")
     create_lvm=$(awk '/create_lvm:/ {print $2;exit}' "${project_dir}/playbooks/vars/kvm_host.yml")
@@ -498,12 +516,13 @@ kvm_host_health_check () {
         KVM_STATUS="notready"
         kvm_host_health_check_results+=(Could not find the firewall-cmd command)
     fi
-
+    
+     echo "LINE 519: ${KVM_STATUS}"
     if [ "A${KVM_STATUS}" != "Anotready" ]
     then
         KVM_IN_GOOD_HEALTH=ready
     else
-        KVM_IN_GOOD_HEALTH=$KVM_STATUS
+        KVM_IN_GOOD_HEALTH="notready"
     fi
 }
 
@@ -523,6 +542,7 @@ function qubinode_setup_kvm_host () {
     # Check if we should setup qubinode
     QUBINODE_SYSTEM=$(awk '/run_qubinode_setup:/ {print $2; exit}' "${kvm_host_vars_file}" | tr -d '"')
 
+    OS=$(cat /etc/redhat-release)
     if [ "A${OS}" != "AFedora" ]
     then
         set_rhel_release

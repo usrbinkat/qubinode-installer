@@ -152,6 +152,7 @@ function collect_system_information() {
 
 
     libvirt_pool_name=$(cat $project_dir/playbooks/vars/kvm_host.yml | grep libvirt_pool_name: | awk '{print $2}')
+    skip_libvirt_pool=$(cat $project_dir/playbooks/vars/kvm_host.yml | grep skip_libvirt_pool: | awk '{print $2}')
     if [[ "A${libvirt_pool_name}" == "Adefault" ]] && [[ "A${skip_libvirt_pool}" == "Ayes" ]]
     then
         printf "%s\n\n" "   Getting information about the libvirt storage."
@@ -330,24 +331,32 @@ function check_hardware_resources () {
 }
 
 function clean_up_stale_vms(){
-    KILLVM=true
-    stalemachines=$(sudo virsh list  --all | grep $1 | awk '{print $2}')
-    for vm in $stalemachines
-    do
-       KILLVM=false
-    done
+    { # try
+        KILLVM=true
+        stalemachines=$(sudo virsh list  --all | grep $1 | awk '{print $2}')
+        for vm in $stalemachines
+        do
+        KILLVM=false
+        done
 
-    if [[ $KILLVM == "true" ]]; then 
-        stale_vms=$(sudo ls "${libvirt_dir}/" | grep $1)
-        if [[ ! -z $stale_vms ]]; then 
-            for old_vm in $stale_vms
-            do
-            if [[ "$old_vm" == *${1}* ]]; then 
-                sudo rm  -f "${libvirt_dir}/$old_vm"
-            fi
-            done 
-        fi 
-    fi
+        if [[ $KILLVM == "true" ]]; then 
+            stale_vms=$(sudo ls "${libvirt_dir}/" | grep $1)
+            if [[ ! -z $stale_vms ]]; then 
+                for old_vm in $stale_vms
+                do
+                if [[ "$old_vm" == *${1}* ]]; then 
+                    sudo rm  -f "${libvirt_dir}/$old_vm"
+                fi
+                done 
+            fi 
+        fi
+
+    } || { # catch
+        printf "%s\n" "   ${yel}Skipping clean_up_stale_vms check.${end}"
+    }
+    
+
+
 
 }
 
@@ -456,11 +465,8 @@ function qubinode_setup () {
     kvm_host_variables
 
     # Start user input session
-    ask_user_input
     setup_variables
     setup_user_ssh_key
-    ask_user_for_idm_password
-    #ask_user_for_networking_info "${vars_file}"
 
     # Ensure ./qubinode-installer -m rhsm is completed
     if [ "A${rhsm_completed}" == "Ano" ]
@@ -473,6 +479,10 @@ function qubinode_setup () {
     then
        qubinode_setup_ansible
     fi
+
+
+    #ask_user_for_networking_info "${vars_file}"
+    ask_user_input
 
     # Ensure ./qubinode-installer -m host is completed
     if [ "A${host_completed}" == "Ano" ]
@@ -491,7 +501,7 @@ function qubinode_setup () {
 function qubinode_base_requirements () {
     ## 9/9/2020 this function should be replaced with qubinode_setup
     # This function ensures all the minimal base requirements are met.
-    if [ "A${running_qubinode_setup}" != "Ayes" ]
+    if [ "A${running_qubinode_setup-no}" != "Ayes" ]
     then
         # Ensure configuration files from samples/ are copied to playbooks/vars/
         qubinode_required_prereqs

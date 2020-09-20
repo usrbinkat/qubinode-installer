@@ -35,11 +35,12 @@ function createmenu () {
 # e.g. if script -s-p pass, it won't use '-' as
 # an argument for -s
 function check_args () {
-    if [[ $OPTARG =~ ^-[p/c/h/d/a/v/m]$ ]]
-    then
-      echo "Invalid option argument $OPTARG, check that each argument has a value." >&2
-      exit 1
-    fi
+
+        if [[ ${OPTARG-default} =~ ^-[p/c/h/d/a/v/m]$ ]]
+        then
+        echo "Invalid option argument $OPTARG, check that each argument has a value." >&2
+        exit 1
+        fi
 }
 
 # this configs prints out asterisks when sensitive data
