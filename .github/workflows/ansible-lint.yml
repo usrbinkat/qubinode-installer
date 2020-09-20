@@ -19,9 +19,9 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Ansible ${{ matrix.ansible-version }}
+    - name: Install Ansible shellcheck
       run: |
-        apt-get install shellcheck
+        sudo apt-get install shellcheck
     - name: Testing all files in lib against shellcheck
       run: |
         #!/bin/bash
