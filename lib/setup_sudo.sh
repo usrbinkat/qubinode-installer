@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function elevate_cmd () {
+    { # try
     local cmd=$@
 
     HAS_SUDO=$(has_sudo)
@@ -18,6 +19,12 @@ function elevate_cmd () {
         su -c "$cmd"
         ;;
     esac
+
+    } || { # catch
+        printf "%s\n" "   ${red}Skipping sudo user check.${end}"
+    }
+
+
 }
 
 function setup_sudoers () {

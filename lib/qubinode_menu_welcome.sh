@@ -18,8 +18,7 @@ display_openshift_msg_okd4 () {
 }
 
 display_hardware_profile_msg () {
-    printf "%s\n" "      ${blu}Minimal     - 30G Memory and 370G Storage${end}"ocp4(): default_message=("Continue with the default installation" "Display other options" "Exit")
-
+    printf "%s\n" "      ${blu}Minimal     - 30G Memory and 370G Storage${end}"
     printf "%s\n" "      ${blu}Standard    - 80G Memory and 900G Storage${end}"
     printf "%s\n" "      ${blu}Performance - 88G Memory and 1340G Storage${end}"
     printf "%s\n" ""
