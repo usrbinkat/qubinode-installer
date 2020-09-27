@@ -1,11 +1,9 @@
+#!/bin/bash 
+set -xe 
 #!/bin/bash
 
 # This function checks the status of RHSM registration
 function check_rhsm_status () {
-    if grep Fedora /etc/redhat-release
-    then
-        echo "Skipping checking RHSM status"
-    else 
         { # try
 
             sudo subscription-manager identity > /dev/null 2>&1
@@ -58,7 +56,6 @@ function check_rhsm_status () {
               printf "%s\n\n" " Please run: ${grn}./qubinode-installer -m clean && ./qubinode-installer -m rhsm${end}"
               exit 1
         }
-    fi
 }
 
 function ask_user_for_rhsm_credentials () {
