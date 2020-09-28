@@ -1,12 +1,14 @@
 function configure_rhel8_packages(){
     sudo dnf clean all > /dev/null 2>&1
     sudo dnf install -y -q -e 0  python3-pip ansible git vim  python3-devel gcc
+    sudo dnf  install -y -q -e 0 container-tools -y
 }
 
 function configure_rhel7_packages(){
     sudo yum clean all > /dev/null 2>&1
     sudo yum install -y -q -e 0 python python3-pip python2-pip python-dns  gcc
     sudo yum install -y -q -e 0 ansible git
+    sudo dnf  install -y -q -e 0 container-tools -y
 }
 
 function configure_rhel8_subscriptions(){
