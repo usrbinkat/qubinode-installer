@@ -36,6 +36,7 @@ function main(){
             configure_rhel8_subscriptions
             configure_rhel8_packages
             install_requirements
+            configure_vault_key
         elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
             check_rhsm_status
             echo "Not tested or supported"
@@ -44,6 +45,7 @@ function main(){
         elif cat /etc/redhat-release  | grep 'Fedora release 3[0-9]' > /dev/null 2>&1; then
             configure_fedora_packages
             install_requirements
+            configure_vault_key
         else
             echo "${red}Unknown RHEL Based server${end}"
             exit 1

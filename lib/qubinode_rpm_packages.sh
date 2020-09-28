@@ -44,3 +44,10 @@ function install_requirements(){
     sudo pip3 install -r "$(pwd)/lib/requirements-to-freeze.txt"
     ansible-galaxy install -r "$(pwd)/playbooks/requirements.yml" --force
 }
+
+function configure_vault_key(){
+    if [ ! -f /home/${USER}/.vaultkey ];
+    then
+      openssl rand -base64 512|xargs > "/home/${USER}/.vaultkey"
+    fi
+}
