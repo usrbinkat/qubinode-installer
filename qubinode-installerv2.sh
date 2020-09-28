@@ -6,6 +6,11 @@ set -o pipefail
 set -o nounset
 #set -o xtrace
 
+# Uncomment for debugging
+#export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+#set -x
+
+
 # Define colours
 red=$'\e[1;31m'
 grn=$'\e[1;32m'
@@ -16,21 +21,34 @@ cyn=$'\e[1;36m'
 def=$'\e[1;49m'
 end=$'\e[0m'
 
-if [ -f /etc/redhat-release ];
-then
-  echo "Checking Red Hat Release Type"
-  if cat /etc/redhat-release  | grep '8.[0-9]' > /dev/null 2>&1; then
-   echo  "RHEL 8" 
-   check_rhsm_status
-  elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
-   echo "RHEL 7"
-   check_rhsm_status
-  elif cat /etc/redhat-release  | grep 'Fedora release 3[0-9]' > /dev/null 2>&1; then
-   echo "Fedora Release"
-  else
-   echo "Unknown RHEL Based server"
-   exit 1
-  fi
-else
-  echo "Contiuning with deployment" 
-fi 
+project_dir="`dirname \"$0\"`"
+
+# Source in files 
+. "${project_dir}/lib/qubinode_rhsm.sh"
+. "${project_dir}/lib/qqubinode_rpm_packages.sh"
+
+function main(){
+    if [ -f /etc/redhat-release ];
+    then
+        echo "Checking Red Hat Release Type"
+        if cat /etc/redhat-release  | grep '8.[0-9]' > /dev/null 2>&1; then
+            check_rhsm_status
+            configure_rhel8_subscriptions
+            configure_rhel8_packages
+        elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
+            check_rhsm_status
+            echo "Not tested or supported"
+            exit 1
+            configure_rhel7_subscriptions
+        elif cat /etc/redhat-release  | grep 'Fedora release 3[0-9]' > /dev/null 2>&1; then
+            configure_rhel8_packages
+        else
+            echo "${red}Unknown RHEL Based server${end}"
+            exit 1
+        fi
+    else
+        echo "Contiuning with deployment" 
+    fi 
+}
+
+main
