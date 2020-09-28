@@ -25,7 +25,7 @@ project_dir="`dirname \"$0\"`"
 
 # Source in files 
 . "${project_dir}/lib/qubinode_rhsm.sh"
-. "${project_dir}/lib/qqubinode_rpm_packages.sh"
+. "${project_dir}/lib/qubinode_rpm_packages.sh"
 
 function main(){
     if [ -f /etc/redhat-release ];
@@ -35,13 +35,15 @@ function main(){
             check_rhsm_status
             configure_rhel8_subscriptions
             configure_rhel8_packages
+            install_requirements
         elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
             check_rhsm_status
             echo "Not tested or supported"
             exit 1
             configure_rhel7_subscriptions
         elif cat /etc/redhat-release  | grep 'Fedora release 3[0-9]' > /dev/null 2>&1; then
-            configure_rhel8_packages
+            configure_fedora_packages
+            install_requirements
         else
             echo "${red}Unknown RHEL Based server${end}"
             exit 1

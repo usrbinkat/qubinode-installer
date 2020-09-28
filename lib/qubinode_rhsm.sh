@@ -1,5 +1,5 @@
 #!/bin/bash 
-set -xe 
+#set -xe 
 
 # this function checks if the system is registered to RHSM
 # validate the registration or register the system
