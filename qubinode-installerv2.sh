@@ -32,26 +32,30 @@ function main(){
     then
         echo "Checking Red Hat Release Type"
         if cat /etc/redhat-release  | grep '8.[0-9]' > /dev/null 2>&1; then
+            printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
             check_rhsm_status
             configure_rhel8_subscriptions
             configure_rhel8_packages
             install_requirements
             configure_vault_key
         elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
-            check_rhsm_status
-            echo "Not tested or supported"
+            printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
+            printf "%s\n" "${red} $(cat /etc/redhat-release) Not tested or supported.{end}"
             exit 1
+            check_rhsm_status
             configure_rhel7_subscriptions
         elif cat /etc/redhat-release  | grep 'Fedora release 3[0-9]' > /dev/null 2>&1; then
+            printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
             configure_fedora_packages
             install_requirements
             configure_vault_key
         else
-            echo "${red}Unknown RHEL Based server${end}"
+            printf "%s\n"  "${red}Unknown RHEL Based server${end}"
             exit 1
         fi
     else
-        echo "Contiuning with deployment" 
+        printf "%s\n"  "${red}Unknown system please see requirements doc.${end}"
+        exit 1
     fi 
 }
 
