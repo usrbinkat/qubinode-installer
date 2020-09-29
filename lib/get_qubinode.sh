@@ -13,7 +13,7 @@ function curl_download(){
         cd $HOME
         #wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
         #extract_quibnode_installer master.zip
-        wget https://github.com/tosin2013/qubinode-installer/archive/release-2.4.3.zip
+        curl -OL  https://github.com/tosin2013/qubinode-installer/archive/release-2.4.3.zip
         extract_quibnode_installer release-2.4.3.zip
     fi 
 }

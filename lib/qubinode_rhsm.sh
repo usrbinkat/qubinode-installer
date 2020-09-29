@@ -50,6 +50,10 @@ function check_rhsm_status () {
         then
             printf "%s\n\n${grn}The system is registered${end}"
             printf "%s\n\n" " Your ${HOSTNAME}: ${grn}Overall Status: Current${end}"
+        elif cat ${IS_REGISTERED_tmp}  | grep 'Overall Status: Unknown' > /dev/null 2>&1  &&  cat ${IS_IDENTITY_CORRECT_tmp}  | grep 'This system is not yet registered.' > /dev/null 2>&1; 
+        then
+            printf "%s\n" " ${red}This system is not yet registered to Red Hat.${end}"
+            qubinode_rhsm_register
         elif cat ${IS_REGISTERED_tmp}  | grep 'Overall Status: Current' > /dev/null 2>&1  &&  cat ${IS_IDENTITY_CORRECT_tmp}  | grep 'has been deleted' > /dev/null 2>&1; 
         then
             printf "%s\n" " ${red}This system is not yet registered to Red Hat.${end}"

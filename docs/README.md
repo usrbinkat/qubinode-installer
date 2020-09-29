@@ -27,16 +27,17 @@ If you choose **Server with GUI**, make sure from the **Add-ons for Selected Evi
 >  * The RHEL installer will delicate the majority of your storage to /home,  you can choose **"I will configure partitioning"** to have control over this.
 >  * Set root password and create admin user with sudo privilege
 
-### The qubinode-installer
+###  get the Qubinode install and start installation 
 
 Downlaod and extract the qubinode-installer as a non root user.
 
 ```shell=
 cd $HOME
-wget https://github.com/Qubinode/qubinode-installer/archive/main.zip
-unzip main.zip
-rm main.zip
-mv qubinode-installer-main qubinode-installer
+curl -OL https://raw.githubusercontent.com/tosin2013/qubinode-installer/release-2.4.3/lib/get_qubinode.sh
+chmod +x get_qubinode.sh
+# review code 
+vim get_qubinode.sh
+./get_qubinode.sh
 ```
 
 ### Qubinode Setup
