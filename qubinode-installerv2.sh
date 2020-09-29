@@ -35,9 +35,10 @@ function main(){
             printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
             check_rhsm_status
             configure_rhel8_subscriptions
-            configure_rhel8_packages
+            configure_rhel8_packagesv
             install_requirements
             configure_vault_key
+            install_ansible_runner_service
         elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
             printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
             printf "%s\n" "${red} $(cat /etc/redhat-release) Not tested or supported.{end}"
@@ -49,6 +50,7 @@ function main(){
             configure_fedora_packages
             install_requirements
             configure_vault_key
+            install_ansible_runner_service
         else
             printf "%s\n"  "${red}Unknown RHEL Based server${end}"
             exit 1
