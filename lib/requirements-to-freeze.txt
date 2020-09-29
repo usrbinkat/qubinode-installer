@@ -5,3 +5,4 @@ netaddr==0.8.0
 ansible-lint
 PyInquirer
 prompt_toolkit==1.0.14
+Flask
