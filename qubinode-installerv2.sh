@@ -26,6 +26,7 @@ project_dir="`dirname \"$0\"`"
 # Source in files 
 . "${project_dir}/lib/qubinode_rhsm.sh"
 . "${project_dir}/lib/qubinode_rpm_packages.sh"
+. "${project_dir}/lib/configure_ansible_runner.sh"
 
 function main(){
     if [ -f /etc/redhat-release ];
