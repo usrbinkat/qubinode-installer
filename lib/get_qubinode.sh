@@ -30,7 +30,7 @@ function curl_download(){
     fi 
 }
 
-#starting the qubinode installer 
+# starting the qubinode installer 
 function start_qubinode_install(){
     cd $HOME/qubinode-installer/
     ./qubinode-installerv2.sh
@@ -77,7 +77,9 @@ function parse_params() {
                 cron=true
                 ;;
             *)
-                script_exit "Invalid parameter was provided: $param" 1
+                echo  "Invalid parameter was provided: $param" 
+                script_usage
+                exit 1
                 ;;
         esac
     done
@@ -93,34 +95,30 @@ function main() {
 
     script_init "$@"
     parse_params "$@"
-    cron_init
-    colour_init
+    # start qubinode installer 
+    if  [ ! -d /home/${USER}/qubinode-installer ];
+    then 
+      if [ ! -x /usr/bin/unzip ] ; then
+        echo "unzip found on system."
+        echo "Please install unzip to continue with install"
+        exit 1
+      fi
+
+      if [ -x /usr/bin/curl ] ; then
+        curl_download
+        start_qubinode_install
+      elif [ -x /usr/bin/wget ] ; then
+        wget_download
+        start_qubinode_install
+      else 
+        echo "wget or curl not found on system."
+        echo "Please install curl or wget to continue with install"
+        exit 1
+      fi
+    fi
     #lock_init system
 }
 
 # Start main function 
 main "$@"
-
-# start qubinode installer 
-if  [ ! -d /home/${USER}/qubinode-installer ];
-then 
-  if [ ! -x /usr/bin/unzip ] ; then
-    echo "unzip found on system."
-    echo "Please install unzip to continue with install"
-    exit 1
-  fi
-
-  if [ -x /usr/bin/curl ] ; then
-    curl_download
-    start_qubinode_install
-  elif [ -x /usr/bin/wget ] ; then
-    wget_download
-    start_qubinode_install
-  else 
-    echo "wget or curl not found on system."
-    echo "Please install curl or wget to continue with install"
-    exit 1
-  fi
-fi
-
 
