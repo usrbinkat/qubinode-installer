@@ -45,14 +45,43 @@ function wget_download(){
     extract_quibnode_installer release-2.4.3.zip
 }
 
+# start the qubinode installer check and download if does not exist
+function start_qubinode_download(){
+  if  [ ! -d /home/${USER}/qubinode-installer ];
+  then 
+    if [ ! -x /usr/bin/unzip ] ; then
+      echo "unzip found on system."
+      echo "Please install unzip to continue with install"
+      exit 1
+    fi
+
+    if [ -x /usr/bin/curl ] ; then
+      curl_download
+      start_qubinode_install
+    elif [ -x /usr/bin/wget ] ; then
+      wget_download
+      start_qubinode_install
+    else 
+      echo "wget or curl not found on system."
+      echo "Please install curl or wget to continue with install"
+      exit 1
+    fi
+  fi
+}
+
+# Remove qubinode installer and conpoments
+function delete_qubinode_installer(){
+  rm -rf $HOME/qubinode-installer 
+}
+
 # displays usage
 function script_usage() {
     cat << EOF
 Usage:
      -h|--help                  Displays this help
      -v|--verbose               Displays verbose output
-    -nc|--no-colour             Disables colour output
-    -cr|--cron                  Run silently unless we encounter an error
+    -i|--install              Install Qubinode installer 
+    -d|--delete                 Remove Qubinode installer 
 EOF
 }
 
@@ -70,10 +99,10 @@ function parse_params() {
             -v | --verbose)
                 verbose=true
                 ;;
-            -nc | --no-colour)
-                no_colour=true
+            -i | --install)
+                start_qubinode_download
                 ;;
-            -cr | --cron)
+            -d | --cron)
                 cron=true
                 ;;
             *)
@@ -95,28 +124,6 @@ function main() {
 
     script_init "$@"
     parse_params "$@"
-    # start qubinode installer 
-    if  [ ! -d /home/${USER}/qubinode-installer ];
-    then 
-      if [ ! -x /usr/bin/unzip ] ; then
-        echo "unzip found on system."
-        echo "Please install unzip to continue with install"
-        exit 1
-      fi
-
-      if [ -x /usr/bin/curl ] ; then
-        curl_download
-        start_qubinode_install
-      elif [ -x /usr/bin/wget ] ; then
-        wget_download
-        start_qubinode_install
-      else 
-        echo "wget or curl not found on system."
-        echo "Please install curl or wget to continue with install"
-        exit 1
-      fi
-    fi
-    #lock_init system
 }
 
 # Start main function 
