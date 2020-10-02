@@ -1,15 +1,18 @@
 import ansible_runner
 import os
+from os import path
 from ansible_vault import Vault
 import argparse
 import os.path
-from os import path
 import json 
 import sys
+import pwd
 
 #vault = Vault('xXxXxXxXx')
 #data = vault.load(open('env/passwords').read())
+username=str(os.environ.get('USER'))
 
+print("Test this username: "+username)
 def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
   if verbose:
     level=3
@@ -18,7 +21,7 @@ def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
   print(extra_vars)
 
   if extra_vars is None:
-    r = ansible_runner.run(private_data_dir='/home/admin/qubinode-installer', playbook=playbook_path,verbosity=level, extravars={'vm_teardown': destroy})
+    r = ansible_runner.run(private_data_dir='/home/cloud_user/qubinode-installer', playbook=playbook_path,verbosity=level, extravars={'vm_teardown': destroy})
     print("{}: {}".format(r.status, r.rc))
     # successful: 0
     #if verbose:
@@ -30,7 +33,7 @@ def run_playbook(data_path, playbook_path, extra_vars, verbose, destroy):
     if r.rc == 2:
       sys.exit(1)
   else:
-    r = ansible_runner.run(private_data_dir='/home/admin/qubinode-installer', playbook=playbook_path,verbosity=level, extravars=json.loads(extra_vars))
+    r = ansible_runner.run(private_data_dir='/home/cloud_user/qubinode-installer', playbook=playbook_path,verbosity=level, extravars=json.loads(extra_vars))
     print("{}: {}".format(r.status, r.rc))
     # successful: 0
     #if verbose:
@@ -71,7 +74,8 @@ def main():
   print(args)
   print(playbookname)
   cwd = os.getcwd()
-  print ("File exists:"+str(path.exists(cwd+'/project/'+playbookname)))
+  print("PATH "+str(cwd))
+  print ("File exists:"+str(path.exists(cwd+'/playbooks/'+playbookname)))
   run_playbook(cwd, playbookname, args.extravars, args.verbose, args.destroy)
 
 if __name__== "__main__":
