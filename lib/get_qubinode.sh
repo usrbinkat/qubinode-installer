@@ -119,13 +119,15 @@ function parse_params() {
 # ARGS: $@ (optional): Arguments provided to the script
 # OUTS: None
 function main() {
-    trap script_trap_err ERR
-    trap script_trap_exit EXIT
-
-    script_init "$@"
     parse_params "$@"
 }
 
 # Start main function 
+if [ -z $@ ];
+then 
+  echo "Please see script usage."
+  script_usage
+fi 
+
 main "$@"
 

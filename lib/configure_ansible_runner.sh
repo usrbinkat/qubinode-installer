@@ -1,5 +1,6 @@
 #!/bin/bash 
 
+# Install ansible runner 
 function install_ansible_runner_service(){
     if [ ! -d /opt/ansible-runner-service ];
     then
