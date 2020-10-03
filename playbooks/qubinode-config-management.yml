@@ -1,7 +1,6 @@
 ---
 - name: Configure qubinode variables
   hosts: localhost
-  remote_user: admin
   become: true
   gather_facts: true
   roles:

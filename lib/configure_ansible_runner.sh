@@ -11,3 +11,11 @@ function install_ansible_runner_service(){
         #sudo ansible_runner_service
     fi 
 }
+
+# Change valut key path in ansible.cfg file
+function update_ansible_cfg(){
+    if [ -f /home/${USER}/qubinode-installer/ansible.cfg ];
+    then 
+      sed -i 's/vault_password_file  = ~\/.vaultkey/vault_password_file  = \/home\/'${USER}'\/.vaultkey/g'  /home/${USER}/qubinode-installer/ansible.cfg
+    fi 
+}

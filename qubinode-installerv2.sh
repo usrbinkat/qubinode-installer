@@ -27,6 +27,7 @@ project_dir="`dirname \"$0\"`"
 . "${project_dir}/lib/qubinode_rhsm.sh"
 . "${project_dir}/lib/qubinode_rpm_packages.sh"
 . "${project_dir}/lib/configure_ansible_runner.sh"
+. "${project_dir}/lib/qubinode_utils.sh"
 
 function main(){
     if [ -f /etc/redhat-release ];
@@ -40,6 +41,9 @@ function main(){
             install_requirements
             configure_vault_key
             install_ansible_runner_service
+            update_ansible_cfg
+            generate_sshkey
+            set_ansible_config_env
         elif cat /etc/redhat-release  | grep '7.[0-9]' > /dev/null 2>&1; then
             printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
             printf "%s\n" "${red} $(cat /etc/redhat-release) Not tested or supported.{end}"
@@ -52,6 +56,9 @@ function main(){
             install_requirements
             configure_vault_key
             install_ansible_runner_service
+            update_ansible_cfg
+            generate_sshkey
+            set_ansible_config_env
         else
             printf "%s\n"  "${red}Unknown RHEL Based server${end}"
             exit 1
