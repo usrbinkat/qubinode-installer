@@ -9,7 +9,7 @@ function install_ansible_runner_service(){
         sudo  mkdir -p /etc/ansible-runner-service
         sudo mkdir -p /usr/share/ansible-runner-service/{artifacts,env,project,inventory,client_cert}
         sudo mv ansible-runner-service /usr/share/ansible-runner-service/
-        cd /opt/ansible-runner-service || exit 
+        cd  /usr/share/ansible-runner-service/ || exit 
         sudo cp ansible_runner_service /usr/bin/
         #sudo  python3 setup.py install --record installed_files --single-version-externally-managed
         #sudo ansible_runner_service
