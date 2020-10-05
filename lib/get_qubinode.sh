@@ -64,7 +64,7 @@ function start_qubinode_download(){
     if [ -x /usr/bin/git ] ; then
       git_clone_code
       start_qubinode_install
-    if [ -x /usr/bin/curl ] ; then
+    elif [ -x /usr/bin/curl ] ; then
       curl_download
       start_qubinode_install
     elif [ -x /usr/bin/wget ] ; then
@@ -91,6 +91,13 @@ function remove_qubinode_folder(){
       sudo rm -rf /usr/local/bin/ansible_runner_service
       sudo rm -rf /tmp/ansible-runner-service/
     fi 
+
+    if [ -f /home/"${USER}"/.ssh/id_rsa ];
+    then
+      sudo rm -rf /home/"${USER}"/.ssh/id_rsa 
+      sudo rm -rf /home/"${USER}"/.ssh/id_rsa.pub
+    fi  
+
 }
 
 # displays usage
