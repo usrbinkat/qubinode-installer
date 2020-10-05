@@ -70,8 +70,11 @@ function start_qubinode_download(){
 }
 
 # Remove qubinode installer and conpoments
-function delete_qubinode_installer(){
-  rm -rf $HOME/qubinode-installer 
+function remove_qubinode_folder(){
+    if [ -d  /home/"${USER}"/qubinode-installer ];
+    then 
+        rm -rf /home/"${USER}"/qubinode-installer
+    fi 
 }
 
 # displays usage
@@ -102,8 +105,8 @@ function parse_params() {
             -i | --install)
                 start_qubinode_download
                 ;;
-            -d | --cron)
-                cron=true
+            -d | --delete)
+                remove_qubinode_folder
                 ;;
             *)
                 echo  "Invalid parameter was provided: $param" 
