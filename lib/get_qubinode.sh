@@ -79,7 +79,7 @@ function remove_qubinode_folder(){
     if [ -d /usr/share/ansible-runner-service ] && [ ! -f /etc/systemd/system/ansible-runner-service.service ];
     then 
       sudo rm -rf /usr/share/ansible-runner-service
-      rm -rf /tmp/ansible-runner-service/
+      sudo rm -rf /tmp/ansible-runner-service/
     fi 
 }
 
