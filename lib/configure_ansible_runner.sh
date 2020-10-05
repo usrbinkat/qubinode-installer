@@ -5,12 +5,16 @@ function install_ansible_runner_service(){
     if [ ! -d /usr/share/ansible-runner-service ];
     then
         mkdir -p /home/"${USER}"/qubinode-installer/env
+        cd /tmp
         git clone https://github.com/ansible/ansible-runner-service.git
         sudo  mkdir -p /etc/ansible-runner-service
         sudo mkdir -p /usr/share/ansible-runner-service/{artifacts,env,project,inventory,client_cert}
-        sudo mv ansible-runner-service /usr/share/ansible-runner-service/
-        cd  /usr/share/ansible-runner-service/ || exit 
-        sudo cp ansible_runner_service /usr/bin/
+        sudo cp /tmp/ansible-runner-service/*.py   /usr/share/ansible-runner-service/
+        sudo cp /tmp/ansible-runner-service/*.yaml   /usr/share/ansible-runner-service/
+        sudo cp /tmp/ansible-runner-service/runner_service /usr/share/ansible-runner-service/runner_service
+        COPY /tmp/ansible-runner-service/ /usr/share/ansible-runner-service/runner_service
+        sudo cp  /tmp/ansible-runner-service/ansible_runner_service /usr/bin/
+        rm -rf /tmp/ansible-runner-service/
         #sudo  python3 setup.py install --record installed_files --single-version-externally-managed
         #sudo ansible_runner_service
     fi 
