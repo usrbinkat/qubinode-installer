@@ -29,8 +29,6 @@ If you choose **Server with GUI**, make sure from the **Add-ons for Selected Evi
 
 ###  get the Qubinode install and start installation 
 
-Downlaod and extract the qubinode-installer as a non root user.
-
 ```shell=
 cd $HOME
 curl -OL https://raw.githubusercontent.com/tosin2013/qubinode-installer/release-2.4.3/lib/get_qubinode.sh
@@ -42,27 +40,17 @@ vim get_qubinode.sh
 
 ### Qubinode Setup
 
-The below commands ensure your system is setup as a KVM host.
-The qubinode-installer needs to run as a regular user.
-
-* setup   - ensure your username is setup for sudoers
-* rhsm    - ensure your rhel system is registered to Red Hat
-* ansible - ensure your rhel system is setup for to function as a ansible controller
-* kvmhost    - ensure your rhel system is setup as a KVM host
-
-> Go [here](qubinode/qubinode-menu-options.adoc) for additional qubinode options.
-
-```shell
-./qubinode-installer -m setup
-./qubinode-installer -m rhsm
-./qubinode-installer -m ansible
-./qubinode-installer -p kvmhost
-```
 
 At this point you should be able to acces the RHEL system via the cockpit web interface on:
 ```
 https://SERVER_IP:9090
 ```
+
+You may also hit the ansible runner api at 
+```
+https://SERVER_IP:5001
+```
+
 ## Deploy a Red Hat Product
 
 Most products depends on the latest rhel 7 or 8 qcow image. You can either manually download them or provide your RHSM api token and the installer will download these files for you.
