@@ -2,7 +2,7 @@
 #set -xe 
 
 function generate_sshkey(){
-   ssh-keygen -f "/home/${USER}.ssh/id_rsa" -q -N '' 
+   ssh-keygen -f "/home/${USER}/.ssh/id_rsa" -q -N '' 
 }
 
 # setting ansible config enviornment for ansible runner 
