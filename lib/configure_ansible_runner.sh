@@ -22,7 +22,7 @@ function install_ansible_runner_service(){
 
 
 function ansible_runner_config_yaml(){
-  cat >/etc/ansible-runner-service/config.yaml<<EOF
+sudo tee -a /etc/ansible-runner-service/config.yaml<<EOF
 ---
 version: 1
 
@@ -55,7 +55,10 @@ EOF
 function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
-      ansible_runner_config_yaml
+      if [ ! -f /etc/ansible-runner-service/config.yaml]
+      then 
+        ansible_runner_config_yaml
+      fi
       sudo cp /tmp/ansible-runner-service/misc/systemd/ansible-runner-service.service /etc/systemd/system
       sudo systemctl enable ansible-runner-service.service
       sudo systemctl start ansible-runner-service.service

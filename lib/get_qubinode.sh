@@ -82,7 +82,7 @@ function start_qubinode_download(){
 function remove_qubinode_folder(){
     if [ -d  /home/"${USER}"/qubinode-installer ];
     then 
-        rm -rf /home/"${USER}"/qubinode-installer
+        sudo rm -rf /home/"${USER}"/qubinode-installer
     fi 
 
     if [ -d /usr/share/ansible-runner-service ] && [ ! -f /etc/systemd/system/ansible-runner-service.service ];
