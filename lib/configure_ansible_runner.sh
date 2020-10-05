@@ -14,7 +14,6 @@ function install_ansible_runner_service(){
         sudo cp -r /tmp/ansible-runner-service/runner_service /usr/share/ansible-runner-service/runner_service
         COPY /tmp/ansible-runner-service/ /usr/share/ansible-runner-service/runner_service
         sudo cp  /tmp/ansible-runner-service/ansible_runner_service /usr/bin/
-        rm -rf /tmp/ansible-runner-service/
         #sudo  python3 setup.py install --record installed_files --single-version-externally-managed
         #sudo ansible_runner_service
     fi 
@@ -23,7 +22,7 @@ function install_ansible_runner_service(){
 function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
-      sudo cp /usr/share/ansible-runner-service/misc/systemd/ansible-runner-service.service /etc/systemd/system
+      sudo cp /tmp/ansible-runner-service/misc/systemd/ansible-runner-service.service /etc/systemd/system
       sudo systemctl enable ansible-runner-service.service
       sudo systemctl start ansible-runner-service.service
       sudo systemctl status ansible-runner-service.service
