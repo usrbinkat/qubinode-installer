@@ -11,7 +11,7 @@ function install_ansible_runner_service(){
         sudo mkdir -p /usr/share/ansible-runner-service/{artifacts,env,project,inventory,client_cert}
         sudo cp /tmp/ansible-runner-service/*.py   /usr/share/ansible-runner-service/
         sudo cp /tmp/ansible-runner-service/*.yaml   /usr/share/ansible-runner-service/
-        sudo cp /tmp/ansible-runner-service/runner_service /usr/share/ansible-runner-service/runner_service
+        sudo cp -r /tmp/ansible-runner-service/runner_service /usr/share/ansible-runner-service/runner_service
         COPY /tmp/ansible-runner-service/ /usr/share/ansible-runner-service/runner_service
         sudo cp  /tmp/ansible-runner-service/ansible_runner_service /usr/bin/
         rm -rf /tmp/ansible-runner-service/
