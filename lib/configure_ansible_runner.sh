@@ -14,6 +14,7 @@ function install_ansible_runner_service(){
         sudo cp -r /tmp/ansible-runner-service/runner_service /usr/share/ansible-runner-service/runner_service
         cd /tmp/ansible-runner-service
         sudo  python3 setup.py install --record installed_files --single-version-externally-managed
+        sudo cp /usr/local/bin/ansible_runner_service /usr/bin/
         #sudo ansible_runner_service
     fi 
 }

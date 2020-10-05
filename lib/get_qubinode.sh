@@ -36,6 +36,12 @@ function start_qubinode_install(){
     ./qubinode-installerv2.sh
 }
 
+function git_clone_code(){
+  git clone https://github.com/tosin2013/qubinode-installer.git
+  cd qubinode-installer
+  git checkout release-2.4.3
+}
+
 # calling a wget to download  qubinode node code
 function wget_download(){
     cd $HOME
@@ -55,6 +61,9 @@ function start_qubinode_download(){
       exit 1
     fi
 
+    if [ -x /usr/bin/git ] ; then
+      git_clone_code
+      start_qubinode_install
     if [ -x /usr/bin/curl ] ; then
       curl_download
       start_qubinode_install
