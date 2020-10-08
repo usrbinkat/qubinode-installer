@@ -55,7 +55,7 @@ EOF
 function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
-      if [ ! -f /etc/ansible-runner-service/config.yaml]
+      if [ ! -f /etc/ansible-runner-service/config.yaml ]
       then 
         ansible_runner_config_yaml
       fi
