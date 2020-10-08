@@ -29,7 +29,7 @@ version: 1
 # playbooks_root_dir
 # location of the playbooks that the service will start
 # playbooks_root_dir: './samples'
-playbooks_root_dir: '/home/${USER}/qubinode-installer/playbooks'
+playbooks_root_dir: '/home/${USER}/qubinode-installer/'
 
 # port
 # tcp port for the service to listen to
