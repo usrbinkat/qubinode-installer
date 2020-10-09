@@ -4,8 +4,6 @@
 function install_ansible_runner_service(){
     if [ ! -d /usr/share/ansible-runner-service ];
     then
-        mkdir -p /home/"${USER}"/qubinode-installer/env
-        ln -s /home/"${USER}"/qubinode-installer/playbooks  /home/"${USER}"/qubinode-installer/project 
         cd /tmp  || exit
         git clone https://github.com/ansible/ansible-runner-service.git
         sudo  mkdir -p /etc/ansible-runner-service
@@ -55,6 +53,9 @@ EOF
 function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
+      mkdir -p /home/"${USER}"/qubinode-installer/env
+      ln -s /home/"${USER}"/qubinode-installer/playbooks  /home/"${USER}"/qubinode-installer/project 
+      sudo ln -s  /home/"${USER}"/qubinode-installer/playbooks /etc/ansible-runner-service/project
       if [ ! -f /etc/ansible-runner-service/config.yaml ]
       then 
         ansible_runner_config_yaml
@@ -62,7 +63,7 @@ function configure_ansible_runner_systemd(){
       sudo cp /tmp/ansible-runner-service/misc/systemd/ansible-runner-service.service /etc/systemd/system
       sudo systemctl enable ansible-runner-service.service
       sudo systemctl start ansible-runner-service.service
-      sudo systemctl status ansible-runner-service.service
+      #sudo systemctl status ansible-runner-service.service
     fi
 }
 
