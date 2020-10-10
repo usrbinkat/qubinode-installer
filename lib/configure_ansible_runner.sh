@@ -71,6 +71,6 @@ function configure_ansible_runner_systemd(){
 function update_ansible_cfg(){
     if [ -f ${HOME}/qubinode-installer/ansible.cfg ];
     then 
-      sed -i 's/vault_password_file  = ~\/.vaultkey/vault_password_file  = \/home\/'"${USER}"'\/.vaultkey/g'  ${HOME}/qubinode-installer/ansible.cfg
+      sed -i 's/vault_password_file  = ~\/.vaultkey/vault_password_file  = '"${HOME}"'\/.vaultkey/g'  ${HOME}/qubinode-installer/ansible.cfg
     fi 
 }
