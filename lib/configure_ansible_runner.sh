@@ -53,9 +53,9 @@ EOF
 function configure_ansible_runner_systemd(){
     if [ ! -f /usr/share/ansible-runner-service ];
     then
-      mkdir -p /home/"${USER}"/qubinode-installer/env
-      ln -s /home/"${USER}"/qubinode-installer/playbooks  /home/"${USER}"/qubinode-installer/project 
-      sudo ln -s  /home/"${USER}"/qubinode-installer/playbooks /etc/ansible-runner-service/project
+      mkdir -p ${HOME}/qubinode-installer/env
+      ln -s ${HOME}/qubinode-installer/playbooks  ${HOME}/qubinode-installer/project 
+      sudo ln -s  ${HOME}/qubinode-installer/playbooks /etc/ansible-runner-service/project
       if [ ! -f /etc/ansible-runner-service/config.yaml ]
       then 
         ansible_runner_config_yaml
@@ -69,8 +69,8 @@ function configure_ansible_runner_systemd(){
 
 # Change valut key path in ansible.cfg file
 function update_ansible_cfg(){
-    if [ -f /home/"${USER}"/qubinode-installer/ansible.cfg ];
+    if [ -f ${HOME}/qubinode-installer/ansible.cfg ];
     then 
-      sed -i 's/vault_password_file  = ~\/.vaultkey/vault_password_file  = \/home\/'"${USER}"'\/.vaultkey/g'  /home/"${USER}"/qubinode-installer/ansible.cfg
+      sed -i 's/vault_password_file  = ~\/.vaultkey/vault_password_file  = \/home\/'"${USER}"'\/.vaultkey/g'  ${HOME}/qubinode-installer/ansible.cfg
     fi 
 }
