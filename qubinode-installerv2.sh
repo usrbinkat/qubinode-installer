@@ -37,7 +37,7 @@ function main(){
             printf "%s\n" "${grn} $(cat /etc/redhat-release) detected. Configuring system for qubinode installer${end}"
             check_rhsm_status
             configure_rhel8_subscriptions
-            configure_rhel8_packagesv
+            configure_rhel8_packages
             install_requirements
             configure_vault_key
             install_ansible_runner_service
