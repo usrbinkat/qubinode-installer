@@ -53,7 +53,7 @@ function wget_download(){
 
 # start the qubinode installer check and download if does not exist
 function start_qubinode_download(){
-  if  [ ! -d /home/${USER}/qubinode-installer ];
+  if  [ ! -d ${HOME}/qubinode-installer ];
   then 
     if [ ! -x /usr/bin/unzip ] ; then
       echo "unzip found on system."
